@@ -28,11 +28,11 @@ module API
       begin
         article = data.where(uuid: uuid).get(:textarea)
         @markdown2html = Kramdown::Document.new(article).to_html
-        res.write partial('messages')
       rescue NoMethodError
         res.status = 404
-      ensure
         res.redirect('/404')
+      else
+        res.write partial('messages')
       end
     end
   end
