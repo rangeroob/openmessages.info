@@ -10,6 +10,6 @@ DB.create_table :data do
   String :uuid
   String :name
   String :email
-  String :textarea
+  Blob :textarea
 end
 
