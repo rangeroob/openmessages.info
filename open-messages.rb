@@ -27,9 +27,12 @@ module API
     on ':uuid' do |uuid|
       begin
         article = data.where(uuid: uuid).get(:textarea)
-        res.write(Kramdown::Document.new(article).to_html)
+        @markdown2html = Kramdown::Document.new(article).to_html
+        res.write partial('messages')
       rescue NoMethodError
         res.status = 404
+      ensure
+        res.redirect('/404')
       end
     end
   end
@@ -46,7 +49,8 @@ module API
       generate_id = SecureRandom.uuid
       data.insert(uuid: generate_id, name: name.to_s, email: email.to_s,
                   textarea: textarea.to_s)
-      res.redirect('/')
+      create_status = res.status = 201
+      res.redirect('/') if create_status
     end
   end
 end
@@ -64,15 +68,15 @@ module FRONTEND
       res.write view('pagetwo')
     end
   end
+  class FourOFour < Cuba; end
+  FourOFour.define do
+    on root do
+      res.write partial('404')
+    end
+  end
 end
 
 Cuba.define do
-  on csrf.unsafe? do
-    csrf.reset!
-    res.status = 403
-    res.write('Not authorized')
-    halt(res.finish)
-  end
   on put do
     on 'message/put' do
       run API::PutMessage
@@ -85,10 +89,21 @@ Cuba.define do
   end
   on get do
     on root do
+      on csrf.unsafe? do
+        csrf.reset!
+
+        res.status = 403
+        res.write('Not authorized')
+
+        halt(res.finish)
+      end
       run FRONTEND::Root
     end
     on 'two' do
       run FRONTEND::Two
+    end
+    on '404' do
+      run FRONTEND::FourOFour
     end
     on 'message' do
       run API::GetMessage
