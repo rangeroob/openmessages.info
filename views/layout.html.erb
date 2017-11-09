@@ -6,7 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= csrf.meta_tag %>
-    <link href="css/style.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="../imgs/messagesicon.png">
 </head>
 
 <body>
@@ -16,10 +17,10 @@
                 <input type="hidden" name="_method" value="PUT">
                 <label for="name">Name:
                     <input type="text" name="name" id="name" placeholder="name" required>
-                </label>
+                </label><br>
                 <label for="email">Email:
                     <input type="email" name="email" id="email" placeholder="email" required>
-                </label>
+                </label><br>
                 <textarea type="text" id="textarea" name="textarea"></textarea>
                 <input type="submit" value="submit">
             </form>
