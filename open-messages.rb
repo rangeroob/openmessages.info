@@ -36,6 +36,14 @@ module API
       end
     end
   end
+  class GetAllUserMessages < Cuba; end
+  GetAllUserMessages.define do
+    on ':email' do |email|
+      @user_messages_uuid = data.where(email: email).select_map(:uuid)
+      @array = @user_messages_uuid.to_a
+      res.write partial('getallusermessages')
+    end
+  end
   class DeleteMessage < Cuba; end
   DeleteMessage.define do
     on root, param('uuid'), param('email') do |uuid, email|
@@ -111,6 +119,9 @@ Cuba.define do
     end
     on 'message' do
       run API::GetMessage
+    end
+    on 'message/user' do
+      run API::GetAllUserMessages
     end
   end
 end
