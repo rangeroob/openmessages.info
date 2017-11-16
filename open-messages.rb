@@ -9,7 +9,7 @@ require 'securerandom'
 require 'sequel'
 
 Cuba.plugin Cuba::Safe
-Cuba.plugin(Cuba::Render)
+Cuba.plugin Cuba::Render
 Cuba.use Rack::Session::Cookie, secret: Random.new_seed.to_s
 Cuba.use Rack::MethodOverride
 Cuba.use Rack::Static, root: 'public', urls: ['/css']
