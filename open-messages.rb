@@ -47,7 +47,7 @@ module API
   PutMessage.define do
     on root, param('name'), param('email'), param('textarea') do |name, email, textarea|
       generate_id = SecureRandom.uuid
-      data.insert(uuid: generate_id, name: name.to_s, email: email.to_s,
+      data.insert(uuid: generate_id.to_s, name: name.to_s, email: email.to_s,
                   textarea: textarea.to_s)
       create_status = res.status = 201
       res.redirect('/') if create_status
