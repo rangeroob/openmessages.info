@@ -612,4 +612,27 @@ html {
     display: block;
     margin-bottom: .5rem;
     font-weight: 600; }
-  
+
+  /* Custom CSS */
+
+    .text_center {
+      text-align: center;
+    }
+
+    .form_textarea {
+      min-height: 300px;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    /* Sticky Footer */
+    
+.content {
+  min-height: calc(100vh - 100px);
+  padding: 40px 40px 0 40px;
+}
+.footer {
+  height: 50px;
+
+}
+
