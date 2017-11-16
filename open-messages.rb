@@ -50,7 +50,7 @@ module API
       data.insert(uuid: generate_id.to_s, name: name.to_s, email: email.to_s,
                   textarea: textarea.to_s)
       create_status = res.status = 201
-      res.redirect('/') if create_status
+      res.redirect("/message/get/#{generate_id}") if create_status
     end
   end
 end
