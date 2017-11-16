@@ -107,7 +107,7 @@ Cuba.define do
     on '404' do
       run FRONTEND::FourOFour
     end
-    on 'message' do
+    on 'message/get' do
       run API::GetMessage
     end
     on 'message/user' do
