@@ -39,9 +39,13 @@ module API
   class DeleteMessage < Cuba; end
   DeleteMessage.define do
     on root, param('uuid'), param('email') do |uuid, email|
+      if data.where(uuid: uuid, email: email).first
       data.where(uuid: uuid, email: email).delete
       res.status = 200
+      elsif data.where(uuid: !uuid) || data.where(email: !email)
+        res.status = 404
     end
+  end
   end
   class PutMessage < Cuba; end
   PutMessage.define do
