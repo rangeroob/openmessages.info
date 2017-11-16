@@ -13,3 +13,4 @@ DB.create_table :data do
   Blob :textarea
 end
 
+DB.add_index :data, %i[uuid email]
