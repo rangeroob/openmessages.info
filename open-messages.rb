@@ -74,12 +74,7 @@ module FRONTEND
       res.write view('layout')
     end
   end
-  class Two < Cuba; end
-  Two.define do
-    on root do
-      res.write view('pagetwo')
-    end
-  end
+
   class FourOFour < Cuba; end
   FourOFour.define do
     on root do
@@ -103,16 +98,11 @@ Cuba.define do
     on root do
       on csrf.unsafe? do
         csrf.reset!
-
         res.status = 403
         res.write('Not authorized')
-
         halt(res.finish)
       end
       run FRONTEND::Root
-    end
-    on 'two' do
-      run FRONTEND::Two
     end
     on '404' do
       run FRONTEND::FourOFour
