@@ -62,9 +62,11 @@ module API
   end
   class PutMessage < Cuba; end
   PutMessage.define do
-    on root, param('name'), param('email'), param('textarea') do |name, email, textarea|
+    on root, param('username'), param('password'), param('textarea') do |username, password, textarea|
       generate_id = SecureRandom.uuid
-      data.insert(uuid: generate_id.to_s, name: name.to_s, email: email.to_s,
+      begin
+       BCrypt::Password.new(user.where(username: username).get(:password)).is_password? password
+       data.insert(uuid: generate_id.to_s, username: username.to_s,
                   textarea: textarea.to_s)
       create_status = res.status = 201
       res.redirect("/message/get/#{generate_id}") if create_status
