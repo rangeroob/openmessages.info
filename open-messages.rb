@@ -53,7 +53,9 @@ module API
         BCrypt::Password.new(user.where(username: username).get(:password)).is_password? password
         data.where(uuid: uuid, username: username).delete
         res.status = 200
-      elsif data.where(uuid: !uuid) || data.where(email: !email)
+      rescue BCrypt::Error
+        res.status = 500
+      rescue Standard::Error
         res.status = 404
       end
     end
