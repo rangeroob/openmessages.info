@@ -76,6 +76,20 @@ module API
   end
 end
 
+  class SignUp < Cuba; end
+  SignUp.define do
+    on root, param('username'), param('password') do |username, password|
+      if user.where(username: username).first
+        res.status = 500
+      else
+        bcrypted_password = BCrypt::Password.create(password)
+        user.insert(username: username, password: bcrypted_password)
+        status200 = res.status = 200
+        res.redirect('/') if status200
+      end
+    end
+  end
+end
 module FRONTEND
   class Root < Cuba; end
   Root.define do
@@ -90,12 +104,23 @@ module FRONTEND
       res.write partial('404')
     end
   end
+  class FrontendSignup < Cuba; end
+  FrontendSignup.define do
+    on root do
+      res.write partial('signup')
+    end
+end
 end
 
 Cuba.define do
   on put do
     on 'message/put' do
       run API::PutMessage
+    end
+  end
+  on post do
+    on 'message/signup' do
+      run API::SignUp
     end
   end
   on delete do
@@ -121,6 +146,15 @@ Cuba.define do
     end
     on 'message/user' do
       run API::GetAllUserMessages
+    end
+    on 'signup' do
+      on csrf.unsafe? do
+        csrf.reset!
+        res.status = 403
+        res.write('Not authorized')
+        halt(res.finish)
+      end
+      run FRONTEND::FrontendSignup
     end
   end
 end
