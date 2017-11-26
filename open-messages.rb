@@ -40,17 +40,18 @@ module API
   end
   class GetAllUserMessages < Cuba; end
   GetAllUserMessages.define do
-    on ':email' do |email|
-      @user_messages_uuid = data.where(email: email).select_map(:uuid)
+    on ':username' do |username|
+      @user_messages_uuid = data.where(username: username).select_map(:uuid)
       @array = @user_messages_uuid.to_a
       res.write partial('getallusermessages')
     end
   end
   class DeleteMessage < Cuba; end
   DeleteMessage.define do
-    on root, param('uuid'), param('email') do |uuid, email|
-      if data.where(uuid: uuid, email: email).first
-        data.where(uuid: uuid, email: email).delete
+    on root, param('uuid'), param('username'), param('password') do |uuid, username, password|
+      begin
+        BCrypt::Password.new(user.where(username: username).get(:password)).is_password? password
+        data.where(uuid: uuid, username: username).delete
         res.status = 200
       elsif data.where(uuid: !uuid) || data.where(email: !email)
         res.status = 404
