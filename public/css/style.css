@@ -625,6 +625,9 @@ html {
       width: 100%;
     }
 
+    .form_button {
+      display: inline-block;
+    }
     /* Sticky Footer */
     
 .content {
