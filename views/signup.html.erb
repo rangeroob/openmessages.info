@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf.meta_tag %>
+        <link href="/../css/style.css" rel="stylesheet">
+        <link rel="icon" type="image/png" href="/../imgs/messagesicon.png">
+</head>
+
+<body>
+    <header class="text_center">
+        <h1>OpenMessages.info</h1>
+    </header>
+<div class="text_center">
+<form class="form_button" action="/" method="GET">
+<button>Home</button>
+</form>
+</div>
+    <div class="content">
+    <div class="text_center">
+        <form action="/message/signup" method="POST">
+            <%= csrf.form_tag %>
+                <input type="hidden" name="_method" value="POST">
+                <br>
+            <label for="username">Username:<br>
+                    <input type="text" name="username" id="username" placeholder="username" required>
+                </label>
+                <br>
+                       <label for="password">Password:<br>
+                    <input type="password" name="password" id="password" placeholder="password" required>
+                </label>
+                <br>
+            
+                <input type="submit" value="Signup">
+        </form>
+    </div>
+    </div>
+    <footer class="footer">
+    <p class="text_center">&copy; 2017 Derek Viera <br> 
+    <a href="https://github.com/rangeroob/open-messages">View Source</a></p>
+    </footer>
+</body>
+
+</html>
