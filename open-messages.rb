@@ -1,3 +1,4 @@
+require 'bcrypt'
 require 'cuba'
 require 'cuba/safe'
 require 'cuba/render'
@@ -22,6 +23,7 @@ Cuba.settings[:render][:views] = './views'
 module API
   DB = Sequel.connect('sqlite://db/sqlite.db')
   data = DB[:data]
+  user = DB[:user]
   class GetMessage < Cuba; end
   GetMessage.define do
     on ':uuid' do |uuid|
