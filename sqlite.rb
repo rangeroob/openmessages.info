@@ -8,9 +8,12 @@ DB = Sequel.connect('sqlite://db/sqlite.db') # requires sqlite3
 DB.create_table :data do
   primary_key :id
   String :uuid
-  String :name
-  String :email
+  String :username
   Blob :textarea
 end
 
-DB.add_index :data, %i[uuid email]
+DB.create_table :user do
+  String :username
+  String :password
+end
+DB.add_index :data, %i[uuid username]
