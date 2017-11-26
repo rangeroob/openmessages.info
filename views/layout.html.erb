@@ -14,17 +14,22 @@
     <header class="text_center">
         <h1>OpenMessages.info</h1>
     </header>
+<div class="text_center">
+<form class="form_button" action="signup" method="GET">
+<button>Signup</button>
+</form>
+</div>
     <div class="content">
     <div class="text_center">
         <form action="message/put" method="POST">
             <%= csrf.form_tag %>
                 <input type="hidden" name="_method" value="PUT">
-                <label for="name">Name:
-                    <input type="text" name="name" id="name" placeholder="name" required>
+                <label for="username">Username:<br>
+                    <input type="text" name="username" id="username" placeholder="username" required>
                 </label>
                 <br>
-                <label for="email">Email:
-                    <input type="email" name="email" id="email" placeholder="email" required>
+                       <label for="password">Password:<br>
+                    <input type="password" name="password" id="password" placeholder="password">
                 </label>
                 <br>
                 <textarea class="form_textarea" type="text" id="textarea" name="textarea" placeholder="Write your message here (Markdown supported)" required></textarea>
