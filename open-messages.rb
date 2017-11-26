@@ -67,14 +67,14 @@ module API
       begin
        BCrypt::Password.new(user.where(username: username).get(:password)).is_password? password
        data.insert(uuid: generate_id.to_s, username: username.to_s,
-                  textarea: textarea.to_s)
-      create_status = res.status = 201
-      res.redirect("/message/get/#{generate_id}") if create_status
+                   textarea: textarea.to_s)
+       create_status = res.status = 201
+       res.redirect("/message/get/#{generate_id}") if create_status
      rescue BCrypt::Error
        res.status = 500
+     end
     end
   end
-end
 
   class SignUp < Cuba; end
   SignUp.define do
@@ -109,7 +109,7 @@ module FRONTEND
     on root do
       res.write partial('signup')
     end
-end
+  end
 end
 
 Cuba.define do
