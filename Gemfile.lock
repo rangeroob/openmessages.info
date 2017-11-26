@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    bcrypt (3.1.11)
     cuba (3.8.1)
       rack (>= 1.6.0)
     kramdown (1.15.0)
@@ -12,6 +13,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt
   cuba
   kramdown
   sequel
