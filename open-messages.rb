@@ -70,6 +70,8 @@ module API
                   textarea: textarea.to_s)
       create_status = res.status = 201
       res.redirect("/message/get/#{generate_id}") if create_status
+     rescue BCrypt::Error
+       res.status = 500
     end
   end
 end
