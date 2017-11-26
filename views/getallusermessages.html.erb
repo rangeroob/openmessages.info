@@ -9,12 +9,14 @@
     <title>OpenMessages</title>
 </head>
 <body>
-<form class="text_center" action="/" method="get">
+<div class="text_center">
+<form class="form_button" action="/" method="get">
 <button>Home</button>
 </form>
-<form action=>
+<form class="form_button" action=>
 <button>Go</button>
 </form>
+</div>
     <% @array.each do |option| %>
     <div class="text_center">
     <ul><a href="http://localhost:9292/message/get/<%= option %>"><%= option %></a></ul>
