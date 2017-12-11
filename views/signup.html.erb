@@ -28,10 +28,12 @@
             <label for="username">Username:<br>
                     <input type="text" name="username" id="username" placeholder="username" required>
                 </label>
+                <%= @used_username %>
                 <br>
                        <label for="password">Password:<br>
-                    <input type="password" name="password" id="password" placeholder="password" required>
+                    <input type="password" pattern =".{8,}" name="password" id="password" placeholder="password" title="8 characters minimun" required>
                 </label>
+                <%= @blacklist_password  %>
                 <br>
             
                 <input type="submit" value="Signup">
