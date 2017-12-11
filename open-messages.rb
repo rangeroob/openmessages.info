@@ -105,6 +105,15 @@ module FRONTEND
       res.write partial('404')
     end
   end
+
+  class FrontendPutError < Cuba; end
+  FrontendPutError.define do
+    on root do
+      @invalid_username_password = '<small>* Invalid Username/Password given</small>'
+      res.write partial('layout')
+    end
+  end
+
   class FrontendSignup < Cuba; end
   FrontendSignup.define do
     on root do
@@ -147,6 +156,9 @@ Cuba.define do
     end
     on 'message/user' do
       run API::GetAllUserMessages
+    end
+    on 'put_error' do
+      run FRONTEND::FrontendPutError
     end
     on 'signup' do
       on csrf.unsafe? do
