@@ -15,7 +15,7 @@
         <h1>OpenMessages.info</h1>
     </header>
 <div class="text_center">
-<form class="form_button" action="signup" method="GET">
+<form class="form_button" action="/signup" method="GET">
 <button>Signup</button>
 </form>
 </div>
@@ -27,9 +27,10 @@
                 <label for="username">Username:<br>
                     <input type="text" name="username" id="username" placeholder="username" required>
                 </label>
+                <%= @invalid_username_password %>
                 <br>
                        <label for="password">Password:<br>
-                    <input type="password" name="password" id="password" placeholder="password">
+                    <input type="password" name="password" id="password" placeholder="password" required>
                 </label>
                 <br>
                 <textarea class="form_textarea" type="text" id="textarea" name="textarea" placeholder="Write your message here (Markdown supported)" required></textarea>
