@@ -66,13 +66,16 @@ module API
     on root, param('username'), param('password'), param('textarea') do |username, password, textarea|
       generate_id = SecureRandom.uuid
       begin
-       BCrypt::Password.new(user.where(username: username).get(:password)).is_password? password
+        check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
+        if check_password == true
        data.insert(uuid: generate_id.to_s, username: username.to_s,
                    textarea: textarea.to_s)
-       create_status = res.status = 201
-       res.redirect("/message/get/#{generate_id}") if create_status
-     rescue BCrypt::Error
-       res.status = 500
+          res.redirect("/message/get/#{generate_id}")
+        elsif check_password == false
+          res.redirect('/put_error')
+        end
+      rescue BCrypt::Errors::InvalidHash
+        res.redirect('/put_error')
      end
     end
   end
