@@ -51,7 +51,7 @@ module API
   DeleteMessage.define do
     on root, param('uuid'), param('username'), param('password') do |uuid, username, password|
       begin
-        BCrypt::Password.new(user.where(username: username).get(:password)).is_password? password
+        BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
         data.where(uuid: uuid, username: username).delete
         res.status = 200
       rescue BCrypt::Error
@@ -83,13 +83,20 @@ module API
   class SignUp < Cuba; end
   SignUp.define do
     on root, param('username'), param('password') do |username, password|
+      checker = PasswordBlacklist::Checker.new
       if user.where(username: username).first
+        @used_username = '<small> * Username already in use </small>'
         res.status = 500
+        res.write partial('/signup')
+      elsif checker.blacklisted?(password) == true
+        @blacklist_password = '<small> * The password provided is blacklisted </small>'
+        res.status = 500
+        res.write partial('/signup')
       else
         bcrypted_password = BCrypt::Password.create(password)
         user.insert(username: username, password: bcrypted_password)
-        status200 = res.status = 200
-        res.redirect('/') if status200
+        hit_status = res.status = 200
+        res.redirect('/') if hit_status
       end
     end
   end
@@ -98,7 +105,7 @@ module FRONTEND
   class Root < Cuba; end
   Root.define do
     on root do
-      res.write view('layout')
+      res.write partial('layout')
     end
   end
 
