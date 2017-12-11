@@ -6,6 +6,7 @@ require 'erb'
 require 'fileutils'
 require 'json'
 require 'kramdown'
+require 'password_blacklist'
 require 'securerandom'
 require 'sequel'
 
