@@ -68,15 +68,15 @@ module API
       begin
         check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
         if check_password == true
-       data.insert(uuid: generate_id.to_s, username: username.to_s,
-                   textarea: textarea.to_s)
+          data.insert(uuid: generate_id.to_s, username: username.to_s,
+                      textarea: textarea.to_s)
           res.redirect("/message/get/#{generate_id}")
         elsif check_password == false
           res.redirect('/put_error')
         end
       rescue BCrypt::Errors::InvalidHash
         res.redirect('/put_error')
-     end
+      end
     end
   end
 
