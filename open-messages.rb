@@ -44,12 +44,12 @@ module API
     on ':username' do |username|
       @user_messages_uuid = data.where(username: username).select_map(:uuid)
       if @user_messages_uuid.any?
-      @array = @user_messages_uuid.to_a
-      res.write partial('getallusermessages')
+        @array = @user_messages_uuid.to_a
+        res.write partial('getallusermessages')
       elsif @user_messages_uuid.empty?
         res.redirect('/404')
+      end
     end
-  end
   end
   class DeleteMessage < Cuba; end
   DeleteMessage.define do
@@ -57,8 +57,8 @@ module API
       begin
         check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
         if check_password == true
-        data.where(uuid: uuid, username: username).delete
-        res.status = 200
+          data.where(uuid: uuid, username: username).delete
+          res.status = 200
         elsif check_password == false
           res.status = 404
         end
