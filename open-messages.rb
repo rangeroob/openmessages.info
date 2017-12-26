@@ -55,9 +55,13 @@ module API
   DeleteMessage.define do
     on root, param('uuid'), param('username'), param('password') do |uuid, username, password|
       begin
-        BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
+        check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
+        if check_password == true
         data.where(uuid: uuid, username: username).delete
         res.status = 200
+        elsif check_password == false
+          res.status = 404
+        end
       rescue BCrypt::Error
         res.status = 500
       rescue Standard::Error
