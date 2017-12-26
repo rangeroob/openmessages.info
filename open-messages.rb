@@ -43,9 +43,13 @@ module API
   GetAllUserMessages.define do
     on ':username' do |username|
       @user_messages_uuid = data.where(username: username).select_map(:uuid)
+      if @user_messages_uuid.any?
       @array = @user_messages_uuid.to_a
       res.write partial('getallusermessages')
+      elsif @user_messages_uuid.empty?
+        res.redirect('/404')
     end
+  end
   end
   class DeleteMessage < Cuba; end
   DeleteMessage.define do
