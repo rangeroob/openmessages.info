@@ -1,3 +1,4 @@
+require 'bcrypt'
 require 'fileutils'
 require 'sequel'
 
@@ -17,3 +18,8 @@ DB.create_table :user do
   String :password
 end
 DB.add_index :data, %i[uuid username]
+
+user = DB[:user]
+
+bcrypted_password = BCrypt::Password.create('johndoe1')
+user.insert(username: 'johndoe', password: bcrypted_password)

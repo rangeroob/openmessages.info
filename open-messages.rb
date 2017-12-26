@@ -43,17 +43,25 @@ module API
   GetAllUserMessages.define do
     on ':username' do |username|
       @user_messages_uuid = data.where(username: username).select_map(:uuid)
-      @array = @user_messages_uuid.to_a
-      res.write partial('getallusermessages')
+      if @user_messages_uuid.any?
+        @array = @user_messages_uuid.to_a
+        res.write partial('getallusermessages')
+      elsif @user_messages_uuid.empty?
+        res.redirect('/404')
+      end
     end
   end
   class DeleteMessage < Cuba; end
   DeleteMessage.define do
     on root, param('uuid'), param('username'), param('password') do |uuid, username, password|
       begin
-        BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
-        data.where(uuid: uuid, username: username).delete
-        res.status = 200
+        check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
+        if check_password == true
+          data.where(uuid: uuid, username: username).delete
+          res.status = 200
+        elsif check_password == false
+          res.status = 404
+        end
       rescue BCrypt::Error
         res.status = 500
       rescue Standard::Error
@@ -68,15 +76,15 @@ module API
       begin
         check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
         if check_password == true
-       data.insert(uuid: generate_id.to_s, username: username.to_s,
-                   textarea: textarea.to_s)
+          data.insert(uuid: generate_id.to_s, username: username.to_s,
+                      textarea: textarea.to_s)
           res.redirect("/message/get/#{generate_id}")
         elsif check_password == false
           res.redirect('/put_error')
         end
       rescue BCrypt::Errors::InvalidHash
         res.redirect('/put_error')
-     end
+      end
     end
   end
 
