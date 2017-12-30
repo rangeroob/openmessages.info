@@ -10,7 +10,7 @@ on the web. It is a platform were anybody can signup and start producing meaning
 to share with friends, family, &amp; the world.">
     <link href="/../css/style.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="/../imgs/messagesicon.png">
-    <title>OpenMessages.info</title>
+    <title>OpenMessages.info Signup</title>
 </head>
 
 <body>
@@ -18,27 +18,28 @@ to share with friends, family, &amp; the world.">
         <h1>OpenMessages.info</h1>
     </header>
 <div class="text_center">
-<form class="form_button" action="/signup" method="GET">
-<button>Signup</button>
+<form class="form_button" action="/" method="GET">
+<button>Home</button>
 </form>
 </div>
     <div class="content">
     <div class="text_center">
-        <form action="message/put" method="POST">
+        <form action="/message/signup" method="POST">
             <%= csrf.form_tag %>
-                <input type="hidden" name="_method" value="PUT">
-                <label for="username">Username:<br>
+                <input type="hidden" name="_method" value="POST">
+                <br>
+            <label for="username">Username:<br>
                     <input type="text" name="username" id="username" placeholder="username" required>
                 </label>
-                <%= @invalid_username_password %>
+                <%= @used_username %>
                 <br>
                        <label for="password">Password:<br>
-                    <input type="password" name="password" id="password" placeholder="password" required>
+                    <input type="password" pattern =".{8,}" name="password" id="password" placeholder="password" title="8 characters minimun" required>
                 </label>
+                <%= @blacklist_password  %>
                 <br>
-                <textarea class="form_textarea" type="text" id="textarea" name="textarea" placeholder="Write your message here (Markdown supported)" required></textarea>
-                <br>
-                <input type="submit" value="submit">
+            
+                <input type="submit" value="Signup">
         </form>
     </div>
     </div>

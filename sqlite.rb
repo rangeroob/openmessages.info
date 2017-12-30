@@ -1,3 +1,4 @@
+require 'bcrypt'
 require 'fileutils'
 require 'sequel'
 
@@ -8,8 +9,17 @@ DB = Sequel.connect('sqlite://db/sqlite.db') # requires sqlite3
 DB.create_table :data do
   primary_key :id
   String :uuid
-  String :name
-  String :email
-  String :textarea
+  String :username
+  Blob :textarea
 end
 
+DB.create_table :user do
+  String :username
+  String :password
+end
+DB.add_index :data, %i[uuid username]
+
+user = DB[:user]
+
+bcrypted_password = BCrypt::Password.create('johndoe1')
+user.insert(username: 'johndoe', password: bcrypted_password)
