@@ -1,6 +1,6 @@
-# [openmessages.info](openmessages.info)
+# openmessages.info
 
-[openmessages.info](openmessages.info) gives an outlet for users to openly convey their thoughts, feelings, & ideas
+[openmessages.info](https://openmessages.info) gives an outlet for users to openly convey their thoughts, feelings, & ideas
 on the web. It is a platform were anybody can signup and start producing meaningful content
 to share with friends, family, & the world.
 
