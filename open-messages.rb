@@ -39,7 +39,7 @@ module API
         res.status = 404
         res.redirect('/404')
       else
-        res.write partial('messages')
+        res.write view('messages')
       end
     end
   end
@@ -49,7 +49,7 @@ module API
       @user_messages_uuid = data.where(username: username).select_map(:uuid)
       if @user_messages_uuid.any?
         @array = @user_messages_uuid.to_a
-        res.write partial('getallusermessages')
+        res.write view('getallusermessages')
       elsif @user_messages_uuid.empty?
         res.redirect('/404')
       end
@@ -99,11 +99,11 @@ module API
       if user.where(username: username).first
         @used_username = '<small> * Username already in use </small>'
         res.status = 500
-        res.write partial('/signup')
+        res.write view('/signup')
       elsif checker.blacklisted?(password) == true
         @blacklist_password = '<small> * The password provided is blacklisted </small>'
         res.status = 500
-        res.write partial('/signup')
+        res.write view('/signup')
       else
         bcrypted_password = BCrypt::Password.create(password)
         user.insert(username: username, password: bcrypted_password)
@@ -117,7 +117,7 @@ module FRONTEND
   class Root < Cuba; end
   Root.define do
     on root do
-      res.write partial('layout')
+      res.write view('home')
     end
   end
 
@@ -132,14 +132,14 @@ module FRONTEND
   FrontendPutError.define do
     on root do
       @invalid_username_password = '<small>* Invalid Username/Password given</small>'
-      res.write partial('layout')
+      res.write view('home')
     end
   end
 
   class FrontendSignup < Cuba; end
   FrontendSignup.define do
     on root do
-      res.write partial('signup')
+      res.write view('signup')
     end
   end
 end
