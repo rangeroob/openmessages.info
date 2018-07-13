@@ -55,6 +55,25 @@ module API
       end
     end
   end
+  class EditMessage < Cuba; end
+  EditMessage.define do
+    on root, param('username'), param('password'), param('title'), param('textarea') do |username, password, title, textarea|
+      check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
+      if check_password == true
+        DB.transaction do
+          data.where(title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s)
+              .update(textarea: textarea)
+          data.where(title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s)
+              .update(edited_on: Date.today.to_s)
+        end
+        res.redirect("/message/get/#{title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s}")
+      elsif check_password == false
+        res.redirect('/put_error')
+      end
+    rescue BCrypt::Errors::InvalidHash
+      res.redirect('/put_error')
+    end
+  end
   class DeleteMessage < Cuba; end
   DeleteMessage.define do
     on root, param('uuid'), param('username'), param('password') do |uuid, username, password|
@@ -148,6 +167,9 @@ Cuba.define do
   on put do
     on 'message/put' do
       run API::PutMessage
+    end
+    on 'message/edit' do
+      run API::EditMessage
     end
   end
   on post do
