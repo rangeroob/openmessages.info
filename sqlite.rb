@@ -20,7 +20,7 @@ DB.create_table :user do
   String :username
   String :password
 end
-DB.add_index :data, %i[uuid username]
+DB.add_index :data, %i[uuid title username]
 
 user = DB[:user]
 
