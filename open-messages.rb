@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -31,26 +33,24 @@ module API
   user = DB[:user]
   class GetMessage < Cuba; end
   GetMessage.define do
-    on ':uuid' do |uuid|
-      begin
-        article = data.where(uuid: uuid).get(:textarea)
-        @markdown2html = Kramdown::Document.new(article).to_html
-      rescue NoMethodError
-        res.status = 404
-        res.redirect('/404')
-      else
-        res.write view('messages')
-      end
+    on ':title' do |title|
+      article = data.where(title: title).get(:textarea)
+      @markdown2html = Kramdown::Document.new(article).to_html
+    rescue NoMethodError
+      res.status = 404
+      res.redirect('/404')
+    else
+      res.write view('messages')
     end
   end
   class GetAllUserMessages < Cuba; end
   GetAllUserMessages.define do
     on ':username' do |username|
-      @user_messages_uuid = data.where(username: username).select_map(:uuid)
-      if @user_messages_uuid.any?
-        @array = @user_messages_uuid.to_a
+      @user_messages_title = data.where(username: username).select_map(:title)
+      if @user_messages_title.any?
+        @array = @user_messages_title.to_a
         res.write view('getallusermessages')
-      elsif @user_messages_uuid.empty?
+      elsif @user_messages_title.empty?
         res.redirect('/404')
       end
     end
@@ -66,7 +66,7 @@ module API
           data.where(title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s)
               .update(edited_on: Date.today.to_s)
         end
-        res.redirect("/message/get/#{title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s}")
+        res.redirect("/message/get/#{title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')}")
       elsif check_password == false
         res.redirect('/put_error')
       end
@@ -76,32 +76,30 @@ module API
   end
   class DeleteMessage < Cuba; end
   DeleteMessage.define do
-    on root, param('uuid'), param('username'), param('password') do |uuid, username, password|
-      begin
-        check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
-        if check_password == true
-          data.where(uuid: uuid, username: username).delete
-          res.status = 200
-        elsif check_password == false
-          res.status = 404
-        end
-      rescue BCrypt::Error
-        res.status = 500
-      rescue Standard::Error
+    on root, param('title'), param('username'), param('password') do |title, username, password|
+      check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
+      if check_password == true
+        data.where(title: title, username: username).delete
+        res.status = 200
+      elsif check_password == false
         res.status = 404
       end
+    rescue BCrypt::Error
+      res.status = 500
+    rescue Standard::Error
+      res.status = 404
     end
   end
   class PutMessage < Cuba; end
   PutMessage.define do
-    on root, param('username'), param('password'), param('textarea') do |username, password, textarea|
+    on root, param('username'), param('password'), param('title'), param('textarea') do |username, password, title, textarea|
       generate_id = SecureRandom.uuid
       begin
         check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
         if check_password == true
           data.insert(uuid: generate_id.to_s, username: username.to_s,
-                      textarea: textarea.to_s)
-          res.redirect("/message/get/#{generate_id}")
+                      title: title, textarea: textarea.to_s)
+          res.redirect("/message/get/#{title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')}")
         elsif check_password == false
           res.redirect('/put_error')
         end
