@@ -36,6 +36,7 @@ module API
     on ':title' do |title|
       article = data.where(title: title).get(:textarea)
       @markdown2html = Kramdown::Document.new(article).to_html
+      @html2markdown = Kramdown::Document.new(@markdown2html, input: 'html').to_kramdown
     rescue NoMethodError
       res.status = 404
       res.redirect('/404')
