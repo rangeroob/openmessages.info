@@ -8,6 +8,7 @@ require 'bcrypt'
 require 'cuba'
 require 'cuba/safe'
 require 'cuba/render'
+require 'date'
 require 'erb'
 require 'fileutils'
 require 'json'
@@ -36,7 +37,8 @@ module API
     on ':title' do |title|
       article = data.where(title: title).get(:textarea)
       @markdown2html = Kramdown::Document.new(article).to_html
-      @html2markdown = Kramdown::Document.new(@markdown2html, input: 'html').to_kramdown
+      @html2markdown = Kramdown::Document.new(@markdown2html, input: 'html')
+                                         .to_kramdown
     rescue NoMethodError
       res.status = 404
       res.redirect('/404')
@@ -99,7 +101,7 @@ module API
         check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
         if check_password == true
           data.insert(uuid: generate_id.to_s, username: username.to_s,
-                      title: title, textarea: textarea.to_s)
+                      title: title, created_on: Date.today.to_s, textarea: textarea.to_s)
           res.redirect("/message/get/#{title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')}")
         elsif check_password == false
           res.redirect('/put_error')
