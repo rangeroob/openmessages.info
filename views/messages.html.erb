@@ -34,18 +34,15 @@
     </div>
     </div>
     <script>
-    function editMessageDisplay() {
-    var displayForm = document.getElementById("editForm");
-    var contentBox = document.getElementById("content");
-    if (displayForm.style.display === "none") {
-        displayForm.style.display = "block";
+    function displayformContent() {
+        var x = document.getElementById("editForm");
+        var y = document.getElementById("page_content");
+        if (x.style.display === "none")  {
+            x.style.display = "block";
+            y.style.display = "none";
     } else {
-        displayForm.style.display = "none";
-    }
-    if (contentBox.style.display === "block") {
-        contentBox.style.display = "none";
-    } else {
-        contentBox.style.display = "block"
+            x.style.display = "none";
+            y.style.display = "block";
     }
 }
     </script>
