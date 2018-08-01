@@ -5,7 +5,7 @@
     <button onclick="displayformContent()">Edit</button>
 </div>
 <div class="text_center">
-    <div id="editForm">
+    <div id="editForm" style="display: none;">
         <form action="/message/edit" method="POST">
             <%= csrf.form_tag %>
                 <input type="hidden" name="_method" value="PUT">
@@ -31,19 +31,8 @@
         </form>
     </div>
 </div>
-<div id="page_content" class="content">
+<div id="page_content" class="content" style="display: block;">
     <%= @markdown2html %>
 </div>
-<script>
-    function displayformContent() {
-        var x = document.getElementById("editForm");
-        var y = document.getElementById("page_content");
-        if (x.style.display === "none")  {
-            x.style.display = "block";
-            y.style.display = "none";
-        } else {
-            x.style.display = "none";
-            y.style.display = "block";
-        }
-    }
+<script src="/../js/javascript.js">
 </script>
