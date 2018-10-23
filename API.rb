@@ -130,6 +130,31 @@ module API
     end
   end
 
+  class Login < Cuba; end
+  API::Login.use Rack::Cerberus, forgot_password_uri: nil, session_key: 'user' do |login, pass|
+    check_password = BCrypt::Password.new(user.where(username: login).get(:password)).is_password?(pass)
+    if check_password == true
+      login == user.where(username: login).get(:username).to_s && BCrypt::Password.new(user.where(username: login).get(:password)).to_s
+    elsif check_password == false
+      print 'invaild-pass'
+    end
+  rescue BCrypt::Errors::InvalidHash
+    print 'invaild-login'
+  end
+  Login.define do
+    on root do
+      res.redirect('/')
+    end
+    on 'secert' do
+      run API::GetMessage
+    end
+    on 'hello' do
+      on root do
+        res.write('bye')
+      end
+    end
+  end
+
   class SignUp < Cuba; end
   SignUp.define do
     on root, param('username'), param('password') do |username, password|
