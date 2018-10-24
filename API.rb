@@ -30,7 +30,7 @@ Cuba.settings[:render][:views] = './views'
 module API
   Cuba.use Rack::Session::Cookie, secret: Random.new_seed.to_s,
                                   oldsecret: Random.new_seed.to_s
-  DB = Sequel.connect('sqlite:..//db/sqlite.db')
+  DB = Sequel.connect('sqlite://db/sqlite.db')
   data = DB[:data]
   user = DB[:user]
   revision = DB[:datarevisions]
