@@ -1,36 +1,31 @@
-   <header class="text_center">
-        <h1>OpenMessages.info</h1>
+   <header class="w3-container w3-center w3-flat-pomegranate w3-padding-64">
+        <h1 class="w3-jumbo">OpenMessages.info</h1>
     </header>
-<div class="text_center">
-<form class="form_button" action="/signup" method="GET">
-<button>Signup</button>
+<form class="w3-container w3-center w3-flat-pomegranate w3-padding-24" action="/signup" method="GET">
+<button class="w3-button w3-flat-clouds">Signup</button>
 </form>
-</div>
-    <div class="content">
-    <div class="text_center">
-        <form action="message/put" method="POST">
+
+        <form class="w3-container w3-center w3-flat-clouds w3-padding-24" action="message/put" method="POST">
             <%= csrf.form_tag %>
                 <input type="hidden" name="_method" value="PUT">
                 <label for="username">Username:<br>
-                    <input type="text" name="username" id="username" placeholder="username" required>
+                    <input  class="w3-input" type="text" name="username" id="username" placeholder="username" required>
                 </label>
                 <%= @invalid_username_password %>
                 <br>
                        <label for="password">Password:<br>
-                    <input type="password" name="password" id="password" placeholder="password" required>
+                    <input  class="w3-input" type="password" name="password" id="password" placeholder="password" required>
                 </label>
                 <br>
                         <label for="title">Title:<br>
-                    <input type="title" name="title" id="title" placeholder="title" required>
+                    <input  class="w3-input" type="title" name="title" id="title" placeholder="title" required>
                 </label>
                 <br>
-                <textarea class="form_textarea" type="text" id="textarea" name="textarea" placeholder="Write your message here (Markdown supported)" required></textarea>
+                <textarea  class="w3-input" type="text" id="textarea" name="textarea" placeholder="Write your message here (Markdown supported)" required style="height:20em;"></textarea>
                 <br>
-                <input type="submit" value="submit">
+                <input class="w3-button w3-center w3-flat-pomegranate" type="submit" value="submit">
         </form>
-    </div>
-    </div>
-    <footer class="footer">
-    <p class="text_center">&copy; 2017 Derek Viera <br> 
+    <footer class="w3-container w3-center">
+    <p>&copy; 2017 Derek Viera <br> 
     <a href="https://github.com/rangeroob/openmessages.info">View Source</a></p>
     </footer>
