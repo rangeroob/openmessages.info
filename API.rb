@@ -14,12 +14,11 @@ require 'fileutils'
 require 'json'
 require 'kramdown'
 require 'password_blacklist'
+require 'rack/cerberus'
 require 'securerandom'
 require 'sequel'
-
 Cuba.plugin Cuba::Safe
 Cuba.plugin Cuba::Render
-Cuba.use Rack::Session::Cookie, secret: Random.new_seed.to_s
 Cuba.use Rack::MethodOverride
 Cuba.use Rack::Static, root: 'public', urls: ['/css']
 Cuba.use Rack::Static, root: 'public', urls: ['/imgs']
@@ -29,9 +28,12 @@ Cuba.settings[:render][:template_engine] = 'html.erb'
 Cuba.settings[:render][:views] = './views'
 
 module API
-  DB = Sequel.connect('sqlite://db/sqlite.db')
+  Cuba.use Rack::Session::Cookie, secret: Random.new_seed.to_s,
+                                  oldsecret: Random.new_seed.to_s
+  DB = Sequel.connect('sqlite:..//db/sqlite.db')
   data = DB[:data]
   user = DB[:user]
+  revision = DB[:datarevisions]
   class GetMessage < Cuba; end
   GetMessage.define do
     on ':title' do |title|
@@ -58,6 +60,19 @@ module API
       end
     end
   end
+  class GetAllTitleRevisions < Cuba; end
+  GetAllTitleRevisions.define do
+    on ':title' do |title|
+      @title_revisions = revision.where(title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s)
+                                 .select_map(:edited_on)
+      if @title_revisions.any?
+        @array = @title_revisions.to_a
+        res.write view('getallusermessages')
+      elsif @title_revisions.empty?
+        res.redirect('/404')
+      end
+    end
+  end
   class EditMessage < Cuba; end
   EditMessage.define do
     on root, param('username'), param('password'), param('title'), param('textarea') do |username, password, title, textarea|
@@ -65,9 +80,16 @@ module API
       if check_password == true
         DB.transaction do
           data.where(title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s)
-              .update(textarea: textarea)
+          revision.insert(uuid: data.where(title: title.downcase.strip.tr(' ', '-')
+          .gsub(/[^\w-]/, '').to_s).select(:uuid),
+                          title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s,
+                          textarea: textarea, edited_on: Time.now.to_i,
+                          created_on: data.where(title: title.downcase.strip.tr(' ', '-')
+                          .gsub(/[^\w-]/, '').to_s).get(:created_on),
+                          username: data.where(title: title.downcase.strip.tr(' ', '-')
+                  .gsub(/[^\w-]/, '').to_s).select(:username))
           data.where(title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s)
-              .update(edited_on: Date.today.to_s)
+              .update(edited_on: Time.now.to_i, textarea: textarea)
         end
         res.redirect("/message/get/#{title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')}")
       elsif check_password == false
@@ -100,14 +122,45 @@ module API
       begin
         check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
         if check_password == true
-          data.insert(uuid: generate_id.to_s, username: username.to_s,
-                      title: title, created_on: Date.today.to_s, textarea: textarea.to_s)
+          DB.transaction do
+            data.insert(uuid: generate_id.to_s, username: username.to_s,
+                        title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, ''),
+                        created_on: Time.now.to_i, edited_on: 0, textarea: textarea.to_s)
+            revision.insert(uuid: generate_id.to_s, username: username.to_s,
+                            title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, ''),
+                            created_on: Time.now.to_i, edited_on: 0, textarea: textarea.to_s)
+          end
           res.redirect("/message/get/#{title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')}")
         elsif check_password == false
           res.redirect('/put_error')
         end
       rescue BCrypt::Errors::InvalidHash
         res.redirect('/put_error')
+      end
+    end
+  end
+
+  class Login < Cuba; end
+  API::Login.use Rack::Cerberus, forgot_password_uri: nil, session_key: 'user' do |login, pass|
+    check_password = BCrypt::Password.new(user.where(username: login).get(:password)).is_password?(pass)
+    if check_password == true
+      login == user.where(username: login).get(:username).to_s && BCrypt::Password.new(user.where(username: login).get(:password)).to_s
+    elsif check_password == false
+      print 'invaild-pass'
+    end
+  rescue BCrypt::Errors::InvalidHash
+    print 'invaild-login'
+  end
+  Login.define do
+    on root do
+      res.redirect('/')
+    end
+    on 'secert' do
+      run API::GetMessage
+    end
+    on 'hello' do
+      on root do
+        res.write('bye')
       end
     end
   end
@@ -130,89 +183,6 @@ module API
         hit_status = res.status = 200
         res.redirect('/') if hit_status
       end
-    end
-  end
-end
-module FRONTEND
-  class Root < Cuba; end
-  Root.define do
-    on root do
-      res.write view('home')
-    end
-  end
-
-  class FourOFour < Cuba; end
-  FourOFour.define do
-    on root do
-      res.write partial('404')
-    end
-  end
-
-  class FrontendPutError < Cuba; end
-  FrontendPutError.define do
-    on root do
-      @invalid_username_password = '<small>* Invalid Username/Password given</small>'
-      res.write view('home')
-    end
-  end
-
-  class FrontendSignup < Cuba; end
-  FrontendSignup.define do
-    on root do
-      res.write view('signup')
-    end
-  end
-end
-
-Cuba.define do
-  on put do
-    on 'message/put' do
-      run API::PutMessage
-    end
-    on 'message/edit' do
-      run API::EditMessage
-    end
-  end
-  on post do
-    on 'message/signup' do
-      run API::SignUp
-    end
-  end
-  on delete do
-    on 'message/delete' do
-      run API::DeleteMessage
-    end
-  end
-  on get do
-    on root do
-      on csrf.unsafe? do
-        csrf.reset!
-        res.status = 403
-        res.write('Not authorized')
-        halt(res.finish)
-      end
-      run FRONTEND::Root
-    end
-    on '404' do
-      run FRONTEND::FourOFour
-    end
-    on 'message/get' do
-      run API::GetMessage
-    end
-    on 'message/user' do
-      run API::GetAllUserMessages
-    end
-    on 'put_error' do
-      run FRONTEND::FrontendPutError
-    end
-    on 'signup' do
-      on csrf.unsafe? do
-        csrf.reset!
-        res.status = 403
-        res.write('Not authorized')
-        halt(res.finish)
-      end
-      run FRONTEND::FrontendSignup
     end
   end
 end
