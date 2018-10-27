@@ -19,7 +19,6 @@ require 'sequel'
 require_relative 'API'
 Cuba.plugin Cuba::Safe
 Cuba.plugin Cuba::Render
-Cuba.use Rack::Session::Cookie, secret: Random.new_seed.to_s
 Cuba.use Rack::MethodOverride
 Cuba.use Rack::Static, root: 'public', urls: ['/css']
 Cuba.use Rack::Static, root: 'public', urls: ['/imgs']
@@ -90,6 +89,9 @@ Cuba.define do
     end
     on '404' do
       run FRONTEND::FourOFour
+    end
+    on 'auth' do
+      run API::Login
     end
     on 'message/get' do
       run API::GetMessage
