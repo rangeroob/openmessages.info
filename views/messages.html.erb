@@ -1,38 +1,55 @@
-<div class="text_center">
-    <form class="form_button" action="/" method="get">
-        <button>Home</button>
+<header class="w3-container w3-center w3-flat-pomegranate w3-padding-64">
+    <h1 class="w3-jumbo">OpenMessages.info</h1>
+
+    <form class="w3-container w3-center w3-flat-pomegranate w3-padding-64" action="/" method="GET">
+        <button class="w3-button w3-flat-clouds w3-card-4">Home</button>
     </form>
-    <button onclick="displayformContent()">Edit</button>
-</div>
-<div class="text_center">
-    <div id="editForm" style="display: none;">
-        <form action="/message/edit" method="POST">
-            <%= csrf.form_tag %>
-                <input type="hidden" name="_method" value="PUT">
-                <label for="username">Username:
-                    <br>
-                    <input type="text" name="username" id="username" placeholder="username" required>
-                </label>
-                <%= @invalid_username_password %>
-                    <br>
-                    <label for="password">Password:
-                        <br>
-                        <input type="password" name="password" id="password" placeholder="password" required>
-                    </label>
-                    <br>
-                    <label for="title">Title:
-                        <br>
-                        <input type="title" name="title" id="title" placeholder="title" required>
-                    </label>
-                    <br>
-                    <textarea class="form_textarea" type="text" id="textarea" name="textarea" required><%= @html2markdown %></textarea>
-                    <br>
-                    <input type="submit" value="save">
-        </form>
-    </div>
+</header>
+
+<div class="w3-container w3-center" id="editForm" style="display: none;">
+    <form action="/message/edit" method="POST">
+        <%= csrf.form_tag %>
+        <input type="hidden" name="_method" value="PUT">
+        <label for="username"><br>Username:
+            <input class="w3-input" type="text" name="username" id="username" placeholder="username" required>
+        </label>
+        <%= @invalid_username_password %>
+        <br>
+        <label for="password">Password:
+            <br>
+            <input class="w3-input" type="password" name="password" id="password" placeholder="password" required>
+        </label>
+        <br>
+        <label for="title">Title:
+            <br>
+            <input class="w3-input" type="title" name="title" id="title" placeholder="title" required>
+        </label>
+        <br>
+        <textarea class="w3-input" type="text" id="textarea" name="textarea" style="min-height: 500px;" required><%= @html2markdown %></textarea>
+        <br>
+        <input class="w3-button w3-center w3-flat-pomegranate" type="submit" value="Submit">
+        <button class="w3-button w3-flat-pomegranate" onclick="displayformContent();">Back</button>
+    </form>
 </div>
 <div id="page_content" class="content" style="display: block;">
-    <%= @markdown2html %>
+    <div id="markdown_style">
+        <style>
+            #markdown_style p {
+                color: red;
+            }
+
+            #markdown_style em {
+                color: #900;
+            }
+        </style>
+        <div class="w3-container  w3-flat-clouds w3-padding-64">
+            <div class="w3-center">
+                <button class="w3-button w3-flat-pomegranate w3-card-4" onclick="displayformContent();">Edit</button>
+            </div>
+            <br>
+            <%= @markdown2html %>
+        </div>
+    </div>
 </div>
 <script src="/../js/displayformContent.js">
 </script>
