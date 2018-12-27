@@ -16,10 +16,20 @@ DB.create_table :data do
   Blob :textarea
 end
 
+DB.create_table :datarevisions do
+  String :uuid
+  String :username
+  String :title
+  String :created_on
+  String :edited_on
+  Blob :textarea
+end
+
 DB.create_table :user do
   String :username
   String :password
 end
+
 DB.add_index :data, %i[uuid title username]
 
 user = DB[:user]
