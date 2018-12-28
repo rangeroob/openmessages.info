@@ -7,9 +7,9 @@ gem 'kramdown'
 gem 'password_blacklist'
 gem 'sequel'
 gem 'sqlite3-static'
-gem 'rack-cerberus'
 group 'test' do
   gem 'cutest'
+  gem 'database_cleaner'
   gem 'rack-test'
 end
 
