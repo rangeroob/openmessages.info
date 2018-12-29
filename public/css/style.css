@@ -187,6 +187,23 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 {color:#000;background-color:#bdc3c7}
 .w3-flat-asbestos
 {color:#fff;background-color:#7f8c8d}
+.w3-safety-red
+{color:#fff;background-color:#bd1e24}
+
+.w3-safety-orange
+{color:#fff;background-color:#e97600}
+
+.w3-safety-yellow
+{color:#fff;background-color:#f6c700}
+
+.w3-safety-green
+{color:#fff;background-color:#007256}
+
+.w3-safety-blue
+{color:#fff;background-color:#0067a7}
+
+.w3-safety-purple
+{color:#fff;background-color:#964f8e}
 
 
 /*BootStrap Sticky Footer*/
@@ -209,4 +226,8 @@ html {
 
   .hidden {
     visibility: hidden;
+  }
+
+  .fill {
+    height:100vh;
   }
