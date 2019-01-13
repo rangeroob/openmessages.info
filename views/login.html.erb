@@ -1,0 +1,26 @@
+<header class="w3-container w3-center w3-flat-pomegranate w3-padding-64">
+  <h1 class="w3-jumbo">OpenMessages.info</h1>
+  <form class="w3-container w3-center w3-flat-pomegranate w3-padding-64" action="/signup" method="GET">
+    <button class="w3-button w3-flat-clouds w3-card-4">Signup</button>
+  </form>
+</header>
+<section class="w3-container w3-flat-clouds w3-padding-64 fill">
+  <form class="w3-container w3-center w3-flat-clouds w3-padding-64" action="/login" method="post">
+    <%= csrf.form_tag %>
+    <input type="hidden" name="_method" value="POST">
+    <label for="username">Username:<br>
+      <input class="w3-input" type="text" name="username" id="username" placeholder="username" required>
+    </label>
+    <%= @invalid_username_password %>
+    <br>
+    <label for="password">Password:<br>
+      <input class="w3-input" type="password" name="password" id="password" placeholder="password" required>
+    </label>
+    <br>
+    <input class="w3-button w3-center w3-flat-pomegranate" type="submit" value="Submit">
+  </form>
+</section>
+<footer class="w3-container w3-center footer">
+  <p>&copy; 2017 Derek Viera <br>
+    <a href="https://github.com/rangeroob/openmessages.info">View Source</a></p>
+</footer>
