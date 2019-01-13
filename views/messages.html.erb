@@ -7,7 +7,7 @@
 </header>
 
 <div class="w3-container w3-center" id="editForm" style="display: none;">
-    <form action="/message/edit" method="POST">
+    <form action="/wiki/edit" method="POST">
         <%= csrf.form_tag %>
         <input type="hidden" name="_method" value="PUT">
         <label for="username"><br>Username:
@@ -53,3 +53,7 @@
 </div>
 <script src="/../js/displayformContent.js">
 </script>
+<footer class="w3-container w3-center footer">
+    <p class="text_center">&copy; 2017 Derek Viera <br>
+        <a href="https://github.com/rangeroob/openmessages.info">View Source</a></p>
+</footer>

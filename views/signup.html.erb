@@ -1,13 +1,13 @@
 <header class="w3-container w3-center w3-flat-pomegranate w3-mobile w3-padding-64">
     <h1 class="w3-jumbo">OpenMessages.info</h1>
-<form class="w3-container w3-center w3-flat-pomegranate w3-padding-64" action="/" method="GET">
-    <button class="w3-button w3-flat-clouds w3-card-4">Home</button>
-</form>
+    <form class="w3-container w3-center w3-flat-pomegranate w3-padding-64" action="/" method="GET">
+        <button class="w3-button w3-flat-clouds w3-card-4">Home</button>
+    </form>
 </header>
 
 
 <section class="w3-container w3-flat-clouds w3-padding-64 fill">
-    <form class="w3-container w3-center w3-flat-clouds w3-padding-64" action="/message/signup" method="POST">
+    <form class="w3-container w3-center w3-flat-clouds w3-padding-64" action="/signup" method="POST">
         <%= csrf.form_tag %>
         <input type="hidden" name="_method" value="POST">
         <label for="username">Username:<br>
@@ -22,7 +22,8 @@
         <%= @blacklist_password  %>
         <br>
         <label for="confirm_password">Confirm Password:
-            <input class="w3-input" type="password" name="confirm_password" id="confirm_password"  placeholder="confirm password" onkeyup="confirmPassword();" required />
+            <input class="w3-input" type="password" name="confirm_password" id="confirm_password" placeholder="confirm password"
+                onkeyup="confirmPassword();" required />
             <span id='message'></span>
         </label>
         <br>
