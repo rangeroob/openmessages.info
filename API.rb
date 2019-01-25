@@ -318,32 +318,26 @@ GetAllTitleRevisions.define do
     end
   end
 end
-  class EditMessage < Cuba; end
-  EditMessage.define do
-    on root, param('username'), param('password'), param('title'), param('textarea') do |username, password, title, textarea|
-      check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
-      if check_password == true
-        DB.transaction do
-          data.where(title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s)
-          revision.insert(uuid: data.where(title: title.downcase.strip.tr(' ', '-')
-          .gsub(/[^\w-]/, '').to_s).select(:uuid),
-                          title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s,
-                          textarea: textarea, edited_on: Time.now.to_i,
-                          created_on: data.where(title: title.downcase.strip.tr(' ', '-')
-                          .gsub(/[^\w-]/, '').to_s).get(:created_on),
-                          username: data.where(title: title.downcase.strip.tr(' ', '-')
-                  .gsub(/[^\w-]/, '').to_s).select(:username))
-          data.where(title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s)
-              .update(edited_on: Time.now.to_i, textarea: textarea)
-        end
-        res.redirect("/message/get/#{title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')}")
-      elsif check_password == false
-        res.redirect('/put_error')
+
+class EditMessage < Cuba; end
+EditMessage.define do
+  on root,
+     param('title'),
+     param('textarea') do |title, textarea|
+    if show_user_id.nil?
+      res.redirect('/login')
+    else
+      DB.transaction do
+        datatable_where_converted_title(title)
+        editwiki_revision_transcation(title, textarea)
+        datatable_update_editedon_textarea_transaction(title, textarea)
       end
-    rescue BCrypt::Errors::InvalidHash
-      res.redirect('/put_error')
+      res.redirect("/wiki/get/#{convert_title(title)}")
     end
+  rescue BCrypt::Errors::InvalidHash
+    res.redirect('/put_error')
   end
+end
   class DeleteMessage < Cuba; end
   DeleteMessage.define do
     on root, param('title'), param('username'), param('password') do |title, username, password|
