@@ -213,6 +213,19 @@ module Api
     else
       res.write view('messages')
     end
+
+    # gets the wiki revision article with a time arguement
+
+    def get_revision(time)
+      article = RevisionTable.where(edited_on: time).get(:textarea)
+      @markdown2html = Kramdown::Document.new(article).to_html
+      @html2markdown = Kramdown::Document.new(@markdown2html, input: 'html')
+                                         .to_kramdown
+    rescue NoMethodError
+      res.status = 404
+      res.write view('/404')
+    else
+      res.write view('messages')
   end
   class GetAllUserMessages < Cuba; end
   GetAllUserMessages.define do
