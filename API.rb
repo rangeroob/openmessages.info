@@ -338,22 +338,21 @@ EditMessage.define do
     res.redirect('/put_error')
   end
 end
-  class DeleteMessage < Cuba; end
-  DeleteMessage.define do
-    on root, param('title'), param('username'), param('password') do |title, username, password|
-      check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
-      if check_password == true
-        data.where(title: title, username: username).delete
-        res.status = 200
-      elsif check_password == false
-        res.status = 404
-      end
-    rescue BCrypt::Error
-      res.status = 500
-    rescue Standard::Error
-      res.status = 404
-    end
+
+class DeleteMessage < Cuba; end
+DeleteMessage.define do
+  on root,
+     param('title'),
+     param('username') do |title, username|
+    check_authentication_session(username)
+    DataTable.where(title: title, username: username).delete
+    res.redirect("/wiki/user/#{username}")
+  rescue BCrypt::Error
+    res.status = 500
+  rescue Standard::Error
+    res.status = 404
   end
+end
   class PutMessage < Cuba; end
   PutMessage.define do
     on root, param('username'), param('password'), param('title'), param('textarea') do |username, password, title, textarea|
