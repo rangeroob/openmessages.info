@@ -304,19 +304,20 @@ GetRevision.define do
   end
 end
 
-  class GetAllTitleRevisions < Cuba; end
-  GetAllTitleRevisions.define do
-    on ':title' do |title|
-      @title_revisions = revision.where(title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '').to_s)
-                                 .select_map(:edited_on)
-      if @title_revisions.any?
-        @array = @title_revisions.to_a
-        res.write view('getallusermessages')
-      elsif @title_revisions.empty?
-        res.redirect('/404')
-      end
+class GetAllTitleRevisions < Cuba; end
+GetAllTitleRevisions.define do
+  on ':title' do |title|
+    @title_revisions = RevisionTable.where(title: convert_title(title).to_s)
+                                    .select_map(:edited_on)
+    if @title_revisions.any?
+      @array = @title_revisions.to_a
+      res.write view('getalltitlerevisions')
+    elsif @title_revisions.empty?
+      res.status = 404
+      res.write view('/404')
     end
   end
+end
   class EditMessage < Cuba; end
   EditMessage.define do
     on root, param('username'), param('password'), param('title'), param('textarea') do |username, password, title, textarea|
