@@ -409,24 +409,21 @@ Logout.define do
   end
 end
 
-  class SignUp < Cuba; end
-  SignUp.define do
-    on root, param('username'), param('password') do |username, password|
-      checker = PasswordBlacklist::Checker.new
-      if user.where(username: username).first
-        @used_username = '<small> * Username already in use </small>'
-        res.status = 500
-        res.write view('/signup')
-      elsif checker.blacklisted?(password) == true
-        @blacklist_password = '<small> * The password provided is blacklisted </small>'
-        res.status = 500
-        res.write view('/signup')
-      else
-        bcrypted_password = BCrypt::Password.create(password)
-        user.insert(username: username, password: bcrypted_password)
-        hit_status = res.status = 200
-        res.redirect('/') if hit_status
-      end
+class SignUp < Cuba; end
+SignUp.define do
+  on get do
+    on root do
+      @show_user_id = show_user_id
+      res.write view('signup')
+    end
+  end
+
+  on post do
+    on root,
+       param('username'),
+       param('password'),
+       param('confirm_password') do |username, password, confirm_password|
+      signup_user(username, password, confirm_password)
     end
   end
 end
