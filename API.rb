@@ -226,7 +226,60 @@ module Api
       res.write view('/404')
     else
       res.write view('messages')
+    end
+
+    def user_name_exists
+      @used_username = '<small>* Username already in use </small>'
+      res.status = 500
+      res.write view('/signup')
+    end
+
+    def password_blacklisted
+      @blacklist_password = '<small>*
+      The password provided is blacklisted </small>'
+      res.status = 500
+      res.write view('/signup')
+    end
+
+    def signup_user(username, password, confirm_password)
+      checker = PasswordBlacklist::Checker.new
+      if UserTable.where(username: username).first
+        user_name_exists
+      elsif checker.blacklisted?(password) == true
+        password_blacklisted
+      elsif confirm_password == password
+        insert_user_transaction(username, password)
+        authenticate(username, password)
+        datatable_generate_first_article
+      end
+    end
   end
+end
+Cuba.plugin Api::Authentication
+Cuba.plugin Api::DatabaseTransactions
+Cuba.plugin Api::WikiArticles
+@session = Cuba.use Rack::Session::Cookie, secret: Random.new_seed.to_s,
+                                           oldsecret: Random.new_seed.to_s
+DB = Sequel.connect('sqlite://db/sqlite.db')
+DataTable = DB[:data]
+UserTable = DB[:user]
+RevisionTable = DB[:datarevisions]
+
+class Root < Cuba; end
+Root.define do
+  on root do
+    @show_user_id = show_user_id
+    res.write view('home')
+  end
+end
+
+class GetMessage < Cuba; end
+GetMessage.define do
+  on ':title' do |title|
+    get_wiki(title)
+  end
+end
+
   class GetAllUserMessages < Cuba; end
   GetAllUserMessages.define do
     on ':username' do |username|
