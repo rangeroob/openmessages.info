@@ -293,8 +293,6 @@ GetAllUserMessages.define do
       @author = username.to_s
       @show_user_id = show_user_id
       res.write view('getallusermessages')
-      elsif @user_messages_title.empty?
-        res.redirect('/404')
     end
   end
 end
