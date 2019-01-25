@@ -27,17 +27,183 @@ Cuba.use Rack::Static, root: 'public', urls: ['/js']
 Cuba.settings[:render][:template_engine] = 'html.erb'
 Cuba.settings[:render][:views] = './views'
 
-module API
-  Cuba.use Rack::Session::Cookie, secret: Random.new_seed.to_s,
-                                  oldsecret: Random.new_seed.to_s
-  DB = Sequel.connect('sqlite://db/sqlite.db')
-  data = DB[:data]
-  user = DB[:user]
-  revision = DB[:datarevisions]
-  class GetMessage < Cuba; end
-  GetMessage.define do
-    on ':title' do |title|
-      article = data.where(title: title).get(:textarea)
+module Api
+  # Authentication Model
+  module Authentication
+    # generates user session labeled as
+    # `:user_id` which the value is equal to
+    # the username given as an arguement
+
+    def generate_user_session(username)
+      env['rack.session'][:user_id] = username
+    end
+
+    # authenticates username with
+    # two arguements given one being the username
+    # and two the password of the account
+
+    def authenticate(username, password)
+      check_password = BCrypt::Password.new(
+        UserTable.where(username: username).get(:password)
+      ).is_password?(password)
+      if check_password == true
+        generate_user_session(username)
+        res.redirect("/wiki/user/#{username}")
+      elsif check_password == false
+        res.status = 401
+        res.write view('/login')
+      end
+    end
+
+    # checks the session against the username given and if the differ
+    # redirects to the login page
+
+    def check_authentication_session(username)
+      res.redirect('/login') if env['rack.session'][:user_id] != username
+    end
+
+    # checks to see where the username is and if the password assoicated
+    # with username is the correct password
+
+    def check_password(username, password)
+      BCrypt::Password.new(
+        UserTable.where(username: username).get(:password)
+      ).is_password?(password)
+    end
+
+    # shows the value of the `rack.session` `:user_id` key
+
+    def show_user_id
+      env['rack.session'][:user_id]
+    end
+
+    # checkes to see if the session key `:user_id` is nil?
+    # and redirects to the login page if `true`
+
+    def authenticated?
+      res.redirect('/login') if env['rack.session'][:user_id].nil?
+    end
+
+    # deletes the `:user_id` session key and
+    # destroys the session altogether
+
+    def user_logout
+      env['rack.session'].delete(:user_id)
+      env['rack.session'].destroy
+    end
+  end
+  # Database Transaction Model
+  module DatabaseTransactions
+    # Puts wiki article into the `data` table
+    # takes arguements of the generate_id, username,
+    # title, and textarea
+
+    def putwiki_datatable_transaction(generate_id, username, title, textarea)
+      DataTable.insert(uuid: generate_id.to_s, username: username.to_s,
+                       title: convert_title(title).to_s,
+                       created_on: Time.now.to_i, edited_on: Time.now.to_i,
+                       textarea: textarea.to_s)
+    end
+
+    # Puts wiki article into the `revision` table
+    # takes arguements of the generate_id, username,
+    # title, and textarea
+
+    def putwiki_revision_transcation(generate_id, username, title, textarea)
+      RevisionTable.insert(uuid: generate_id.to_s, username: username.to_s,
+                           title: convert_title(title).to_s,
+                           created_on: Time.now.to_i, edited_on: Time.now.to_i,
+                           textarea: textarea.to_s)
+    end
+
+    # Updates wiki article into the `revision` table
+    # takes arguements of the title and textarea
+
+    def editwiki_revision_transcation(title, textarea)
+      RevisionTable.insert(uuid:
+        DataTable.where(title: convert_title(title).to_s).select(:uuid),
+                           title: convert_title(title).to_s,
+                           textarea: textarea, edited_on: Time.now.to_i,
+                           created_on:
+                           datatable_get_createdon_transcation(title),
+                           username:
+                           datatable_select_username_transcation(title))
+    end
+
+    # generates an article once the user signs up
+
+    def datatable_generate_first_article
+      generate_id = SecureRandom.uuid
+      DataTable.insert(uuid: generate_id.to_s, username: show_user_id.to_s,
+                       title: generate_id.to_s,
+                       created_on: Time.now.to_i, edited_on: Time.now.to_i,
+                       textarea: generate_markdown)
+      res.redirect("/wiki/user/#{show_user_id}")
+    end
+
+    def datatable_get_createdon_transcation(title)
+      DataTable.where(title:
+        convert_title(title).to_s).get(:created_on)
+    end
+
+    def datatable_select_username_transcation(title)
+      DataTable.where(title:
+        convert_title(title).to_s).select(:username)
+    end
+
+    def datatable_where_username_map_articles(username)
+      DataTable.where(
+        username: username
+      ).select_map(:title)
+    end
+
+    def datatable_where_converted_title(title)
+      DataTable.where(title:
+        convert_title(title).to_s)
+    end
+
+    def datatable_update_editedon_textarea_transaction(title, textarea)
+      DataTable.where(title: convert_title(title).to_s)
+               .update(edited_on: Time.now.to_i, textarea: textarea)
+    end
+
+    def insert_user_transaction(username, password)
+      bcrypted_password = BCrypt::Password.create(password)
+      UserTable.insert(username: username, password: bcrypted_password)
+    end
+  end
+
+  module WikiArticles
+    # generates lorem lipsum markdown text using an HTTP API hosted at
+    # `https://jaspervdj.be/lorem-markdownum/markdown.txt`
+
+    def generate_markdown
+      Net::HTTP.get(URI('https://jaspervdj.be/lorem-markdownum/markdown.txt')).to_s
+    end
+
+    # converts titles with a [space] to a [dash]
+
+    def convert_title(title)
+      title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')
+    end
+
+    # checks whether the title exists
+
+    def check_input_title(title)
+      DataTable.where(title: convert_title(title)).get(:title)
+    end
+
+    # checks where the title is an gets its value
+
+    def get_title(title)
+      DataTable.where(title: title).get(:title)
+    end
+
+    # gets the wiki article with a title arguement
+
+    def get_wiki(title)
+      article = DataTable.where(title: title).get(:textarea)
+      @get_title = get_title(title)
       @markdown2html = Kramdown::Document.new(article).to_html
       @html2markdown = Kramdown::Document.new(@markdown2html, input: 'html')
                                          .to_kramdown
