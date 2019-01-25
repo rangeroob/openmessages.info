@@ -280,8 +280,11 @@ GetMessage.define do
   end
 end
 
-  class GetAllUserMessages < Cuba; end
-  GetAllUserMessages.define do
+class GetAllUserMessages < Cuba; end
+GetAllUserMessages.define do
+  on root do
+    res.redirect('/login')
+  end
     on ':username' do |username|
       @user_messages_title = data.where(username: username).select_map(:title)
       if @user_messages_title.any?
