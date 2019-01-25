@@ -296,6 +296,14 @@ GetAllUserMessages.define do
     end
   end
 end
+
+class GetRevision < Cuba; end
+GetRevision.define do
+  on ':time' do |time|
+    get_revision(time)
+  end
+end
+
   class GetAllTitleRevisions < Cuba; end
   GetAllTitleRevisions.define do
     on ':title' do |title|
