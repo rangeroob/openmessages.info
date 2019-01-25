@@ -15,7 +15,6 @@ require 'net/http'
 require 'json'
 require 'kramdown'
 require 'password_blacklist'
-require 'rack/cerberus'
 require 'securerandom'
 require 'sequel'
 Cuba.plugin Cuba::Safe
