@@ -285,16 +285,19 @@ GetAllUserMessages.define do
   on root do
     res.redirect('/login')
   end
-    on ':username' do |username|
-      @user_messages_title = data.where(username: username).select_map(:title)
-      if @user_messages_title.any?
-        @array = @user_messages_title.to_a
-        res.write view('getallusermessages')
+  on ':username' do |username|
+    check_authentication_session(username)
+    @user_messages_title = datatable_where_username_map_articles(username)
+    if @user_messages_title.any? || @user_messages_title.empty?
+      @array = @user_messages_title.to_a
+      @author = username.to_s
+      @show_user_id = show_user_id
+      res.write view('getallusermessages')
       elsif @user_messages_title.empty?
         res.redirect('/404')
-      end
     end
   end
+end
   class GetAllTitleRevisions < Cuba; end
   GetAllTitleRevisions.define do
     on ':title' do |title|
