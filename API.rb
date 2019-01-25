@@ -379,30 +379,35 @@ PutMessage.define do
   end
 end
 
-  class Login < Cuba; end
-  API::Login.use Rack::Cerberus, forgot_password_uri: nil, session_key: 'user' do |login, pass|
-    check_password = BCrypt::Password.new(user.where(username: login).get(:password)).is_password?(pass)
-    if check_password == true
-      login == user.where(username: login).get(:username).to_s && BCrypt::Password.new(user.where(username: login).get(:password)).to_s
-    elsif check_password == false
-      print 'invaild-pass'
-    end
-  rescue BCrypt::Errors::InvalidHash
-    print 'invaild-login'
-  end
-  Login.define do
+class Login < Cuba; end
+Login.define do
+  on get do
     on root do
+      res.status = 401 if env['rack.session'][:user_id].nil? == true
+      @show_user_id = show_user_id
+      res.write view('/login')
+    end
+  end
+
+  on post do
+    on root, param('username'), param('password') do |username, password|
+      authenticate(username, password)
+    rescue BCrypt::Error
+      res.status = 401
+      res.write view('/login')
+    end
+  end
+end
+
+class Logout < Cuba; end
+Logout.define do
+  on get do
+    on root do
+      user_logout
       res.redirect('/')
     end
-    on 'secert' do
-      run API::GetMessage
-    end
-    on 'hello' do
-      on root do
-        res.write('bye')
-      end
-    end
   end
+end
 
   class SignUp < Cuba; end
   SignUp.define do
