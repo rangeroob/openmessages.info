@@ -353,30 +353,31 @@ DeleteMessage.define do
     res.status = 404
   end
 end
-  class PutMessage < Cuba; end
-  PutMessage.define do
-    on root, param('username'), param('password'), param('title'), param('textarea') do |username, password, title, textarea|
-      generate_id = SecureRandom.uuid
-      begin
-        check_password = BCrypt::Password.new(user.where(username: username).get(:password)).is_password?(password)
-        if check_password == true
-          DB.transaction do
-            data.insert(uuid: generate_id.to_s, username: username.to_s,
-                        title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, ''),
-                        created_on: Time.now.to_i, edited_on: 0, textarea: textarea.to_s)
-            revision.insert(uuid: generate_id.to_s, username: username.to_s,
-                            title: title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, ''),
-                            created_on: Time.now.to_i, edited_on: 0, textarea: textarea.to_s)
-          end
-          res.redirect("/message/get/#{title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')}")
-        elsif check_password == false
-          res.redirect('/put_error')
-        end
-      rescue BCrypt::Errors::InvalidHash
-        res.redirect('/put_error')
+
+class PutMessage < Cuba; end
+PutMessage.define do
+  on root,
+     param('username'),
+     param('password'),
+     param('title'),
+     param('textarea') do |username, password, title, textarea|
+    generate_id = SecureRandom.uuid
+    password = check_password(username, password)
+    check_title = check_input_title(title)
+    if (password == true) && (check_title != convert_title(title))
+      DB.transaction do
+        putwiki_datatable_transaction(generate_id, username, title, textarea)
+        putwiki_revision_transcation(generate_id, username, title, textarea)
       end
+      res.redirect("/wiki/get/#{convert_title(title)}")
+    elsif (password == false) || (check_title == convert_title(title))
+      res.redirect('/put_error')
     end
+  rescue BCrypt::Errors::InvalidHash
+    res.status = 500
+    res.redirect('/put_error')
   end
+end
 
   class Login < Cuba; end
   API::Login.use Rack::Cerberus, forgot_password_uri: nil, session_key: 'user' do |login, pass|
