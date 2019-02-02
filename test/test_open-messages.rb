@@ -5,15 +5,15 @@ require 'database_cleaner'
 require 'sequel'
 require 'fileutils'
 require 'sqlite3'
-require_relative '../open-messages.rb'
+require_relative '../app/personalwiki'
 
 DatabaseCleaner.strategy = :truncation
 
 DatabaseCleaner.cleaning do
-  scope do 
+  scope do
     test 'create test user' do
-      post '/message/signup', 'username' => 'johndoe', 'password' => 'johndoe1985',
-                              'confirm_password' => 'johndoe1985'
+      post '/signup', 'username' => 'johndoe', 'password' => 'johndoe1985',
+                      'confirm_password' => 'johndoe1985'
     end
   end
   scope do
@@ -40,46 +40,88 @@ DatabaseCleaner.cleaning do
   scope do
     test 'SignupError' do
       # password is on blacklist
-      post '/message/signup', 'username' => 'a', 'password' => 'aaaaaaaaaa',
-                              'confirm_password' => 'aaaaaaaaaa'
+      post '/signup', 'username' => 'a', 'password' => 'aaaaaaaaaa',
+                      'confirm_password' => 'aaaaaaaaaa'
       assert_equal 500, last_response.status
       # user already exists
-      post '/message/signup', 'username' => 'johndoe', 'password' => 'aaaaaaaa',
-                              'confirm_password' => 'aaaaaaaa'
+      post '/signup', 'username' => 'johndoe', 'password' => 'aaaaaaaa',
+                      'confirm_password' => 'aaaaaaaa'
       assert_equal 500, last_response.status
     end
   end
   scope do
-    test 'PutMessage' do
-      #create a test page
-      put '/message/put', 'title' => 'test', 'username' => 'johndoe', 'password' => 'johndoe1985', 'textarea' => '#Hello World'
+    test 'PutWiki' do
+      # create a test wiki page
+      put '/wiki/put', 'title' => 'test', 'username' => 'johndoe',
+                       'password' => 'johndoe1985', 'textarea' => '#Hello World'
       follow_redirect!
       assert last_response.body.include?('Hello World')
       assert_equal 200, last_response.status
     end
   end
   scope do
-    test 'GetAllUserMessages' do
-      # shows test page link under user
-      get '/message/user/johndoe'
+    test 'Authenticate User' do
+      # authenticate existing user
+      post '/login', 'username' => 'johndoe', 'password' => 'johndoe1985'
+      follow_redirect!
+      assert last_response.body.include?('johndoe')
+      assert_equal 200, last_response.status
+      # authenticate nonexisting user
+      post '/login', 'username' => 'janedoe', 'password' => 'test'
+      assert_equal 401, last_response.status
+    end
+  end
+  scope do
+    test 'GetAllUserWikis' do
+      # authentcate user johndoe
+      post '/login', 'username' => 'johndoe', 'password' => 'johndoe1985'
+      # shows wiki pages authored by johndoe if authenticated
+      get '/wiki/user/johndoe'
       assert last_response.ok?
       assert_equal 200, last_response.status
-      get '/message/user/janedoe'
+      # nonexistent user
+      get '/wiki/user/janedoe'
       follow_redirect!
       assert_equal 200, last_response.status
     end
   end
   scope do
-    test 'DeleteMessage' do
-      # user does not exist
-      delete '/message/delete', 'title' => 'test', 'username' => 'abc', 'password' => 'abc'
-      assert_equal 500, last_response.status
-      # user exists but wrong password
-      delete '/message/delete', 'title' => 'test', 'username' => 'johndoe', 'password' => 'a'
-      assert_equal 404, last_response.status
-      # user exists and correct password
-      delete '/message/delete', 'title' => 'test', 'username' => 'johndoe', 'password' => 'johndoe1985'
+    test 'GetAllTitleRevisions' do
+      # shows wiki page revisions under article title
+      get '/wiki/title/test'
+      assert last_response.ok?
       assert_equal 200, last_response.status
+      get '/wiki/title/doesnotexist'
+      assert_equal 404, last_response.status
+    end
+  end
+  scope do
+    test 'GetCertainTitleRevision' do
+      # show certain page revisions under a point in time
+      get "/wiki/rev/#{Time.now.to_i}"
+      assert last_response.ok?
+      assert_equal 200, last_response.status
+      get '/wiki/rev/doesnotexist'
+      assert_equal 404, last_response.status
+    end
+  end
+  scope do
+    test 'DeleteMessage' do
+      # user does not exist redirect to login
+      delete '/wiki/delete', 'title' => 'test', 'username' => 'abc',
+                             'password' => 'abc'
+      follow_redirect!
+      assert_equal 302, last_response.status
+      # user exists but wrong password redirect to login
+      delete '/wiki/delete', 'title' => 'test', 'username' => 'johndoe',
+                             'password' => 'a'
+      follow_redirect!
+      assert_equal 302, last_response.status
+      # user exists and correct password
+      delete '/wiki/delete', 'title' => 'test', 'username' => 'johndoe',
+                             'password' => 'johndoe1985'
+
+      assert_equal 302, last_response.status
     end
   end
 end
