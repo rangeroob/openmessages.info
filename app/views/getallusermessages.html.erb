@@ -1,0 +1,40 @@
+<header class="w3-container w3-center w3-flat-pomegranate w3-padding-64">
+    <h1 class="w3-jumbo">OpenMessages.info</h1>
+    <div class="w3-dropdown-hover w3-padding-64">
+        <button class="w3-button w3-flat-clouds w3-card-4"><i class="w3-xxlarge material-icons">menu</i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a href="/signup" class="w3-bar-item w3-button">Signup</a>
+            <a href="/login" class="w3-bar-item w3-button">Login</a>
+            <a href="/logout" class="w3-bar-item w3-button">Logout</a>
+            <a href="/wiki/user/<%= @show_user_id %>" class="w3-bar-item w3-button">
+                <%= @show_user_id %></a>
+        </div>
+    </div>
+</header>
+<h2 class="w3-container w3-center">
+    <%= @author %>
+</h2>
+<section class="w3-container w3-center w3-flat-clouds fill">
+    <% @array.each do |option| %>
+    <ul class="w3-left"><a href="/wiki/get/<%= option %>"><button class="w3-button w3-medium w3-flat-pomegranate">
+                <%= option %></button></a>
+        <form action="/wiki/delete" method="POST">
+            <%= csrf.form_tag %>
+            <input type="hidden" name="_method" value="DELETE">
+            <label for="username">
+                <input class="w3-input" type="hidden" name="username" id="username" placeholder="username" value="<%= @author %>"
+                    required>
+            </label>
+            <label for="title">
+                <input class="w3-input" type="hidden" name="title" id="title" placeholder="title" value="<%= option %>">
+
+            </label>
+            <button class="w3-button" type="submit"><i class="w3-xlarge w3-button material-icons">delete</i></button>
+    </ul>
+    </form>
+    <% end %>
+</section>
+<footer class="w3-container w3-center footer">
+    <p>&copy; 2017 Derek Viera <br>
+        <a href="https://github.com/rangeroob/openmessages.info">View Source</a></p>
+</footer>

@@ -2,34 +2,32 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.0)
+    backport (0.2.0)
     bcrypt (3.1.12)
     clap (1.0.0)
-    coderay (1.1.2)
     cuba (3.9.2)
       rack (>= 1.6.0)
     cutest (1.2.3)
       clap
-    eventmachine (1.2.7)
+    database_cleaner (1.7.0)
     htmlentities (4.3.4)
     jaro_winkler (1.5.1)
     kramdown (1.17.0)
-    mini_portile2 (2.3.0)
-    nokogiri (1.8.5)
-      mini_portile2 (~> 2.3.0)
+    mini_portile2 (2.4.0)
+    nokogiri (1.9.1)
+      mini_portile2 (~> 2.4.0)
     parallel (1.12.1)
-    parser (2.5.1.2)
+    parser (2.5.3.0)
       ast (~> 2.4.0)
     password_blacklist (0.3.0)
     powerpack (0.1.2)
     rack (2.0.6)
-    rack-cerberus (1.1.1)
-      rack (>= 1.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rainbow (3.0.0)
     reverse_markdown (1.1.0)
       nokogiri
-    rubocop (0.60.0)
+    rubocop (0.61.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
@@ -38,22 +36,21 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.4.0)
     ruby-progressbar (1.10.0)
-    sequel (5.13.0)
-    solargraph (0.28.4)
-      coderay (~> 1.1)
-      eventmachine (~> 1.2, >= 1.2.5)
+    sequel (5.15.0)
+    solargraph (0.30.1)
+      backport (~> 0.2)
       htmlentities (~> 4.3, >= 4.3.4)
       kramdown (~> 1.16)
-      parser (~> 2.4)
+      parser (~> 2.3)
       reverse_markdown (~> 1.0, >= 1.0.5)
       rubocop (~> 0.52)
       thor (~> 0.19, >= 0.19.4)
       tilt (~> 2.0)
       yard (~> 0.9)
     sqlite3-static (3.22.0)
-    thor (0.20.0)
-    tilt (2.0.8)
-    unicode-display_width (1.4.0)
+    thor (0.20.3)
+    tilt (2.0.9)
+    unicode-display_width (1.4.1)
     yard (0.9.16)
 
 PLATFORMS
@@ -63,13 +60,13 @@ DEPENDENCIES
   bcrypt
   cuba
   cutest
+  database_cleaner
   kramdown
   password_blacklist
-  rack-cerberus
   rack-test
   sequel
   solargraph
   sqlite3-static
 
 BUNDLED WITH
-   1.16.6
+   1.17.2
