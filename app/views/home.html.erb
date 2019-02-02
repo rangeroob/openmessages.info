@@ -1,0 +1,41 @@
+<header class="w3-container w3-center w3-flat-pomegranate w3-padding-64">
+    <h1 class="w3-jumbo">OpenMessages.info</h1>
+    <div class="w3-dropdown-hover w3-padding-64">
+        <button class="w3-button w3-flat-clouds w3-card-4"><i class="w3-xxlarge material-icons">menu</i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a href="/signup" class="w3-bar-item w3-button">Signup</a>
+            <a href="/login" class="w3-bar-item w3-button">Login</a>
+            <a href="/logout" class="w3-bar-item w3-button">Logout</a>
+            <a href="/wiki/user/<%= @show_user_id %>" class="w3-bar-item w3-button">
+                <%= @show_user_id %></a>
+        </div>
+    </div>
+</header>
+<section class="w3-container w3-flat-clouds w3-padding-64">
+    <form class="w3-container w3-center w3-flat-clouds w3-padding-64" action="/wiki/put" method="POST">
+        <%= csrf.form_tag %>
+        <input type="hidden" name="_method" value="PUT">
+        <label for="username">Username:<br>
+            <input class="w3-input" type="text" name="username" id="username" placeholder="username" value="<%= @show_user_id %>"
+                required>
+        </label>
+        <%= @invalid_username_password %>
+        <br>
+        <label for="password">Password:<br>
+            <input class="w3-input" type="password" name="password" id="password" placeholder="password" required>
+        </label>
+        <br>
+        <label for="title">Title:<br>
+            <input class="w3-input" type="title" name="title" id="title" placeholder="title" required>
+        </label>
+        <br>
+        <textarea class="w3-input" type="text" id="textarea" name="textarea" placeholder="Write your message here (Markdown supported)"
+            required style="height:20em;"></textarea>
+        <br>
+        <input class="w3-button w3-center w3-flat-pomegranate" type="submit" value="Submit">
+    </form>
+</section>
+<footer class="w3-container w3-center footer">
+    <p>&copy; 2017 Derek Viera <br>
+        <a href="https://github.com/rangeroob/openmessages.info">View Source</a></p>
+</footer>
