@@ -2,9 +2,6 @@
 
 require 'cuba/test'
 require 'database_cleaner'
-require 'sequel'
-require 'fileutils'
-require 'sqlite3'
 require_relative '../app/personalwiki'
 
 DatabaseCleaner.strategy = :truncation
