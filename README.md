@@ -2,36 +2,14 @@
 
 [openmessages.info](https://openmessages.info) gives an outlet for users to openly convey their thoughts, feelings, & ideas
 on the web. It is a platform were anybody can signup and start producing meaningful content
-to share with friends, family, & the world.
+to share and collaborate with friends, family, & the world.
 
 You can test out the service with demo user credentials but make no promises about data retention
 
 username - ```jonhdoe```
 
-password - ```johndoe1```
+password - ```johndoe1985```
 
-## API Usage
-
-To get a single message by uuid
-```
-message/get/uuid
-```
-To get all messages authored by a certain user
-```
-message/user/username
-```
-To delete a single message by uuid
-```
-message/delete?uuid=uuid&username=username&password=password
-```
-To put a single message
-```
-message/put?username=username&password=password&textarea=message
-```
-To signup
-```
-message/signup?username=username&password=password
-```
 
 ## Contributing
 
@@ -57,7 +35,7 @@ rake test
 * [kramdown](https://github.com/gettalong/kramdown) - The markdown parser used
 * [password_blacklist](https://github.com/gchan/password_blacklist) - The password checker used
 * [sequel](https://github.com/jeremyevans/sequel) - The ORM used
-* [sqlite3](https://github.com/sparklemotion/sqlite3-ruby) - The database used
+* [sqlite3-static](https://github.com/Instabridge/sqlite3-ruby-static/) - The database used
 
 ## License
 
