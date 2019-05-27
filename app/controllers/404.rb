@@ -4,7 +4,7 @@ module Controller
   class FourOFour < Cuba; end
   FourOFour.define do
     on root do
-      res.write partial('404')
+      res.write view('404')
     end
   end
 end
