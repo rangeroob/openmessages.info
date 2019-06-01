@@ -24,7 +24,7 @@ module Model
         res.redirect("/wiki/user/#{username}")
       elsif check_password == false
         res.status = 401
-        res.write view('/login')
+        render('/login')
       end
     end
 

@@ -5,7 +5,7 @@ module Controller
   Root.define do
     on root do
       @show_user_id = show_user_id
-      res.write view('home')
+      render('home')
     end
   end
 end
