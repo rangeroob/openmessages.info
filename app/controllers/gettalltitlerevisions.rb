@@ -11,7 +11,7 @@ module Controller
         res.write view('getalltitlerevisions')
       elsif @title_revisions.empty?
         res.status = 404
-        res.write view('/404')
+        render('/404')
       end
     end
   end

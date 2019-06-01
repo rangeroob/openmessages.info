@@ -5,7 +5,7 @@ module Controller
   PutError.define do
     on root do
       @invalid_username_password = '<small>* Invalid Username/Password given</small>'
-      res.write view('home')
+      render('home')
     end
   end
 end

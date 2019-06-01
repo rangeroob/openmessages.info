@@ -7,7 +7,7 @@ module Controller
       on root do
         res.status = 401 if env['rack.session'][:user_id].nil? == true
         @show_user_id = show_user_id
-        res.write view('/login')
+        render('/login')
       end
     end
 
@@ -16,7 +16,7 @@ module Controller
         authenticate(username, password)
       rescue BCrypt::Error
         res.status = 401
-        res.write view('/login')
+        render('/login')
       end
     end
   end
