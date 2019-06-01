@@ -38,9 +38,9 @@ module Model
                                          .to_kramdown
     rescue NoMethodError
       res.status = 404
-      res.write view('/404')
+      render('/404')
     else
-      res.write view('messages')
+      render('messages')
     end
 
     # gets the wiki revision article with a time arguement
@@ -52,22 +52,22 @@ module Model
                                          .to_kramdown
     rescue NoMethodError
       res.status = 404
-      res.write view('/404')
+      render('/404')
     else
-      res.write view('messages')
+      render('messages')
     end
 
     def user_name_exists
       @used_username = '<small>* Username already in use </small>'
       res.status = 500
-      res.write view('/signup')
+      render('/signup')
     end
 
     def password_blacklisted
       @blacklist_password = '<small>*
       The password provided is blacklisted </small>'
       res.status = 500
-      res.write view('/signup')
+      render('/signup')
     end
 
     def signup_user(username, password, confirm_password)
