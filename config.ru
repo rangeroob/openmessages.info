@@ -1,3 +1,3 @@
-require_relative 'app/personalwiki'
+require_relative 'app/open-messages'
 
 run Cuba
