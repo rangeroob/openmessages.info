@@ -17,5 +17,5 @@ group 'test' do
 end
 
 group 'dev' do
-  gem 'solargraph'
+  gem 'solargraph', '>= 0.23.2'
 end
