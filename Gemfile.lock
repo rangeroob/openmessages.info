@@ -20,7 +20,7 @@ GEM
     parser (2.6.3.0)
       ast (~> 2.4.0)
     password_blacklist (0.3.0)
-    rack (2.0.7)
+    rack (2.0.8)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rainbow (3.0.0)
