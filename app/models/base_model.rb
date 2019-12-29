@@ -33,8 +33,10 @@ Cuba.settings[:render][:views] = 'app/views'
 Cuba.plugin Model::Authentication
 Cuba.plugin Model::DatabaseTransactions
 Cuba.plugin Model::WikiArticles
-@session = Cuba.use Rack::Session::Cookie, secret: Random.new_seed.to_s,
-                                           oldsecret: Random.new_seed.to_s
+@session = Cuba.use Rack::Session::Cookie,
+                    expire_after: 86_400,
+                    secret: Random.new_seed.to_s,
+                    oldsecret: Random.new_seed.to_s
 DB = Sequel.connect('sqlite://db/sqlite.db')
 DataTable = DB[:data]
 UserTable = DB[:user]
