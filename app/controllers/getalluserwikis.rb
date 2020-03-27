@@ -13,7 +13,7 @@ module Controller
         @array = @user_messages_title.to_a
         @author = username.to_s
         @show_user_id = show_user_id
-        render('getallusermessages')
+        render('getalluserwikis')
       end
     end
   end

@@ -20,6 +20,7 @@ require_relative 'models/base_model'
 require_relative 'controllers/404'
 require_relative 'controllers/deletewiki'
 require_relative 'controllers/editwiki'
+require_relative 'controllers/getallwikis'
 require_relative 'controllers/getalluserwikis'
 require_relative 'controllers/getrevision'
 require_relative 'controllers/gettalltitlerevisions'
@@ -109,6 +110,10 @@ Cuba.define do
 
     on 'wiki/title' do
       run Controller::GetAllTitleRevisions
+    end
+
+    on 'wiki/articles' do
+      run Controller::GetAllWikis
     end
 
     on 'put_error' do

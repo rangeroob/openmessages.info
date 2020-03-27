@@ -66,6 +66,10 @@ module Model
       ).select_map(:title)
     end
 
+    def datatable_map_all_articles
+      DataTable.select_map(:title)
+    end
+
     def datatable_where_converted_title(title)
       DataTable.where(title:
         convert_title(title).to_s)

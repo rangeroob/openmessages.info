@@ -1,5 +1,5 @@
 <h2 class="w3-container w3-center">
-    <%= @author %>
+    <%= @author %>'s Articles
 </h2>
 <section class="w3-container w3-center w3-flat-clouds fill">
     <% @array.each do |option| %>
@@ -9,8 +9,8 @@
             <%= csrf.form_tag %>
             <input type="hidden" name="_method" value="DELETE">
             <label for="username">
-                <input class="w3-input" type="hidden" name="username" id="username" placeholder="username" value="<%= @author %>"
-                    required>
+                <input class="w3-input" type="hidden" name="username" id="username" placeholder="username"
+                    value="<%= @author %>" required>
             </label>
             <label for="title">
                 <input class="w3-input" type="hidden" name="title" id="title" placeholder="title" value="<%= option %>">
