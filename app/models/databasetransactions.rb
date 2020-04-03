@@ -3,6 +3,12 @@
 module Model
   # Database Transaction Model
   module DatabaseTransactions
+    # Generates time in epoch format then converts it to
+    # Year-month-day_Hour-Minute-Second time format.
+
+    def generate_time
+      Time.at(Time.now.to_i).strftime('%Y-%m-%d_%H-%M-%S')
+    end
     # Puts wiki article into the `data` table
     # takes arguements of the generate_id, username,
     # title, and textarea
@@ -10,7 +16,7 @@ module Model
     def putwiki_datatable_transaction(generate_id, username, title, textarea)
       DataTable.insert(uuid: generate_id.to_s, username: username.to_s,
                        title: convert_title(title).to_s,
-                       created_on: Time.now.to_i, edited_on: Time.now.to_i,
+                       created_on: generate_time, edited_on: generate_time,
                        textarea: textarea.to_s)
     end
 
@@ -21,7 +27,7 @@ module Model
     def putwiki_revision_transcation(generate_id, username, title, textarea)
       RevisionTable.insert(uuid: generate_id.to_s, username: username.to_s,
                            title: convert_title(title).to_s,
-                           created_on: Time.now.to_i, edited_on: Time.now.to_i,
+                           created_on: generate_time, edited_on: generate_time,
                            textarea: textarea.to_s)
     end
 
@@ -32,7 +38,7 @@ module Model
       RevisionTable.insert(uuid:
         DataTable.where(title: convert_title(title).to_s).select(:uuid),
                            title: convert_title(title).to_s,
-                           textarea: textarea, edited_on: Time.now.to_i,
+                           textarea: textarea, edited_on: generate_time,
                            created_on:
                            datatable_get_createdon_transcation(title),
                            username:
@@ -45,7 +51,7 @@ module Model
       generate_id = SecureRandom.uuid
       DataTable.insert(uuid: generate_id.to_s, username: show_user_id.to_s,
                        title: generate_id.to_s,
-                       created_on: Time.now.to_i, edited_on: Time.now.to_i,
+                       created_on: generate_time, edited_on: generate_time,
                        textarea: generate_markdown)
       res.redirect("/wiki/user/#{show_user_id}")
     end
@@ -77,7 +83,7 @@ module Model
 
     def datatable_update_editedon_textarea_transaction(title, textarea)
       DataTable.where(title: convert_title(title).to_s)
-               .update(edited_on: Time.now.to_i, textarea: textarea)
+               .update(edited_on: generate_time, textarea: textarea)
     end
 
     def insert_user_transaction(username, password)
