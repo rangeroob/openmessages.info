@@ -2,7 +2,7 @@
 
 require 'cuba/test'
 require 'database_cleaner'
-require_relative '../app/personalwiki'
+require_relative '../app/open-messages'
 
 DatabaseCleaner.strategy = :truncation
 
@@ -50,7 +50,7 @@ DatabaseCleaner.cleaning do
     test 'PutWiki' do
       # create a test wiki page
       put '/wiki/put', 'title' => 'test', 'username' => 'johndoe',
-                       'password' => 'johndoe1985', 'textarea' => '#Hello World'
+                       'password' => 'johndoe1985', 'textarea' => 'Hello World'
       follow_redirect!
       assert last_response.body.include?('Hello World')
       assert_equal 200, last_response.status
@@ -96,7 +96,6 @@ DatabaseCleaner.cleaning do
     test 'GetCertainTitleRevision' do
       # show certain page revisions under a point in time
       get "/wiki/rev/#{Time.now.to_i}"
-      assert last_response.ok?
       assert_equal 200, last_response.status
       get '/wiki/rev/doesnotexist'
       assert_equal 404, last_response.status
