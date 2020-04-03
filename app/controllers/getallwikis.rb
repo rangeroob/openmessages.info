@@ -7,6 +7,7 @@ module Controller
       @user_messages_title = datatable_map_all_articles
       if @user_messages_title.any? || @user_messages_title.empty?
         @array = @user_messages_title.to_a
+        @show_user_id = show_user_id
         render('getallwikis')
       end
     end
