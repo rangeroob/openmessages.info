@@ -16,6 +16,12 @@ module Model
       title.downcase.strip.tr(' ', '-').gsub(/[^\w-]/, '')
     end
 
+    # convert titles back with a [dash] to a [space]
+
+    def reconvert_title(title)
+      get_title(title).downcase.strip.tr('-', ' ').gsub(/[^\w-]/, ' ')
+    end
+
     # checks whether the title exists
 
     def check_input_title(title)
@@ -32,7 +38,7 @@ module Model
 
     def get_wiki(title)
       article = DataTable.where(title: title).get(:textarea)
-      @get_title = get_title(title)
+      @get_title = reconvert_title(title)
       @markdown2html = Kramdown::Document.new(article).to_html
       @html2markdown = Kramdown::Document.new(@markdown2html, input: 'html')
                                          .to_kramdown
