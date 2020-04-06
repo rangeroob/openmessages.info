@@ -29,7 +29,12 @@
         </style>
         <div class="w3-container  w3-flat-clouds w3-padding-64">
             <div class="w3-center">
-                <button class="w3-button w3-flat-pomegranate w3-card-4" onclick="displayformContent();">Edit</button>
+                <% if env['rack.session'][:user_id].nil? == true %>
+                <% hide = "hidden" %>
+                <% elsif env['rack.session'][:user_id].nil? == false %>
+                <% unhide = "" %>
+                <button class="w3-button w3-flat-pomegranate w3-card-4 <%= hide || unhide %>" onclick="displayformContent();">Edit</button>
+                <% end %>
             </div>
             <br>
             <%= @markdown2html %>
