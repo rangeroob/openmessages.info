@@ -4,19 +4,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-require 'bcrypt'
-require 'cuba'
-require 'cuba/safe'
-require 'cuba/render'
-require 'date'
-require 'erb'
-require 'fileutils'
-require 'json'
-require 'kramdown'
-require 'password_blacklist'
-require 'securerandom'
-require 'sequel'
-require 'time'
 require_relative 'models/base_model'
 require_relative 'controllers/404'
 require_relative 'controllers/deletewiki'
@@ -26,22 +13,13 @@ require_relative 'controllers/getalluserwikis'
 require_relative 'controllers/getrevision'
 require_relative 'controllers/gettalltitlerevisions'
 require_relative 'controllers/getwiki'
+require_relative 'controllers/github'
 require_relative 'controllers/putwiki'
 require_relative 'controllers/puterror'
 require_relative 'controllers/root'
 require_relative 'controllers/login'
 require_relative 'controllers/logout'
 require_relative 'controllers/signup'
-
-Cuba.plugin Cuba::Safe
-Cuba.plugin Cuba::Render
-Cuba.use Rack::MethodOverride
-Cuba.use Rack::Static, root: 'public', urls: ['/css']
-Cuba.use Rack::Static, root: 'public', urls: ['/imgs']
-Cuba.use Rack::Static, root: 'public', urls: ['/js']
-
-Cuba.settings[:render][:template_engine] = 'html.erb'
-Cuba.settings[:render][:views] = './views'
 
 Cuba.define do
   on put do
@@ -59,6 +37,9 @@ Cuba.define do
     end
     on 'login' do
       run Controller::Login
+    end
+    on 'auth/:provider' do |provider|
+      run Controller::Auth::Github if provider == 'github'
     end
   end
 
@@ -91,6 +72,10 @@ Cuba.define do
         halt(res.finish)
       end
       run Controller::Login
+    end
+
+    on 'auth/:provider/callback' do |provider|
+      run Controller::Auth::Github if provider == 'github'
     end
 
     on 'logout' do
