@@ -13,7 +13,8 @@ GEM
     database_cleaner (1.8.3)
     e2mmap (0.1.0)
     jaro_winkler (1.5.4)
-    kramdown (2.1.0)
+    kramdown (2.3.0)
+      rexml
     maruku (0.7.3)
     mini_portile2 (2.4.0)
     nokogiri (1.10.9)
