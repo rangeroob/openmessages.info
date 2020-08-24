@@ -13,7 +13,6 @@ require_relative 'controllers/getalluserwikis'
 require_relative 'controllers/getrevision'
 require_relative 'controllers/gettalltitlerevisions'
 require_relative 'controllers/getwiki'
-require_relative 'controllers/github'
 require_relative 'controllers/putwiki'
 require_relative 'controllers/puterror'
 require_relative 'controllers/root'
@@ -37,9 +36,6 @@ Cuba.define do
     end
     on 'login' do
       run Controller::Login
-    end
-    on 'auth/:provider' do |provider|
-      run Controller::Auth::Github if provider == 'github'
     end
   end
 
@@ -72,10 +68,6 @@ Cuba.define do
         halt(res.finish)
       end
       run Controller::Login
-    end
-
-    on 'auth/:provider/callback' do |provider|
-      run Controller::Auth::Github if provider == 'github'
     end
 
     on 'logout' do
