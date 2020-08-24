@@ -6,7 +6,7 @@ group 'production' do
   gem 'bcrypt'
   gem 'cuba'
   gem 'kramdown'
-  gem 'omniauth-github'
+
   gem 'password_blacklist'
   gem 'sequel'
   gem 'sqlite3-static'
