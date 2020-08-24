@@ -15,7 +15,6 @@ require 'fileutils'
 require 'net/http'
 require 'json'
 require 'kramdown'
-require 'omniauth-github'
 require 'password_blacklist'
 require 'securerandom'
 require 'sequel'
@@ -40,12 +39,6 @@ Cuba.plugin Model::WikiArticles
                     expire_after: 86_400,
                     secret: Random.new_seed.to_s,
                     oldsecret: Random.new_seed.to_s
-Cuba.use OmniAuth::Builder do
-  provider :github, ENV['GITHUB_CLIENT_ID'],
-           ENV['GITHUB_CLIENT_SECRET_KEY'],
-           scope: 'user'
-end
-OmniAuth.config.allowed_request_methods = [:post]
 DB = Sequel.connect('sqlite://db/sqlite.db')
 DataTable = DB[:data]
 UserTable = DB[:user]
