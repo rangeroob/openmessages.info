@@ -34,7 +34,7 @@ module Model
       DataTable.where(title: title).get(:title)
     end
 
-    # gets the wiki article with a title arguement
+    # gets the wiki article with a title argument
 
     def get_wiki(title)
       article = DataTable.where(title: title).get(:textarea)
@@ -49,7 +49,7 @@ module Model
       render('messages')
     end
 
-    # gets the wiki revision article with a time arguement
+    # gets the wiki revision article with a time argument
 
     def get_revision(time)
       article = RevisionTable.where(edited_on: time).get(:textarea)
@@ -74,19 +74,6 @@ module Model
       The password provided is blacklisted </small>'
       res.status = 500
       render('/signup')
-    end
-
-    def signup_user(username, password, confirm_password)
-      checker = PasswordBlacklist::Checker.new
-      if UserTable.where(username: username).first
-        user_name_exists
-      elsif checker.blacklisted?(password) == true
-        password_blacklisted
-      elsif confirm_password == password
-        insert_user_transaction(username, password)
-        authenticate(username, password)
-        datatable_generate_first_article
-      end
     end
   end
 end
