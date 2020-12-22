@@ -7,10 +7,10 @@ module Model
     # Year-month-day_Hour-Minute-Second time format.
 
     def generate_time
-      Time.at(Time.now.to_i).strftime('%Y-%m-%d_%H-%M-%S')
+      Time.at(Time.now.to_i).strftime('%Y-%m-%d_%H:%M:%S')
     end
     # Puts wiki article into the `data` table
-    # takes arguements of the generate_id, username,
+    # takes arguments of the generate_id, username,
     # title, and textarea
 
     def putwiki_datatable_transaction(generate_id, username, title, textarea)
@@ -21,7 +21,7 @@ module Model
     end
 
     # Puts wiki article into the `revision` table
-    # takes arguements of the generate_id, username,
+    # takes arguments of the generate_id, username,
     # title, and textarea
 
     def putwiki_revision_transcation(generate_id, username, title, textarea)
@@ -32,7 +32,7 @@ module Model
     end
 
     # Updates wiki article into the `revision` table
-    # takes arguements of the title and textarea
+    # takes arguments of the title and textarea
 
     def editwiki_revision_insert_transcation(title, textarea)
       RevisionTable.insert(uuid:
@@ -49,10 +49,15 @@ module Model
 
     def datatable_generate_first_article
       generate_id = SecureRandom.uuid
+      freeze_generate_markdown = "#Welcome to OpenMessages.info\n" + generate_markdown
       DataTable.insert(uuid: generate_id.to_s, username: show_user_id.to_s,
                        title: generate_id.to_s,
                        created_on: generate_time, edited_on: generate_time,
-                       textarea: generate_markdown)
+                       textarea: freeze_generate_markdown)
+      RevisionTable.insert(uuid: generate_id.to_s, username: show_user_id.to_s,
+                           title: generate_id.to_s,
+                           created_on: generate_time, edited_on: generate_time,
+                           textarea: freeze_generate_markdown)
       res.redirect("/wiki/user/#{show_user_id}")
     end
 

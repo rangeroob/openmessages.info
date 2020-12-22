@@ -95,7 +95,7 @@ DatabaseCleaner.cleaning do
   scope do
     test 'GetCertainTitleRevision' do
       # show certain page revisions under a point in time
-      get "/wiki/rev/#{Time.at(Time.now.to_i).strftime('%Y-%m-%d_%H-%M-%S')}"
+      get "/wiki/rev/#{Time.at(Time.now.to_i).strftime('%Y-%m-%d_%H:%M:%S')}"
       assert_equal 200, last_response.status
       get '/wiki/rev/doesnotexist'
       assert_equal 404, last_response.status

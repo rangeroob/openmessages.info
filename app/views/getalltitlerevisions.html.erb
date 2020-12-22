@@ -1,10 +1,16 @@
 <h2 class="w3-container w3-center">
-    <%= @author %>
+    <% if @author.nil? %>
+        <%= '' %>
+        <% else %>
+        <%= @author %>
+        <% end %>
 </h2>
 <section class="w3-container w3-center w3-flat-clouds fill">
     <% @array.each do |option| %>
     <ul class="w3-left"><a href="/wiki/rev/<%= option %>"><button class="w3-button w3-flat-pomegranate">
-                <%= option %></button></a></ul>
+        <% substring = 32  %>
+        <%= option[0,substring] %></button></a>
+            </ul>
     <% end %>
 </section>
 <footer class="w3-container w3-center footer">
