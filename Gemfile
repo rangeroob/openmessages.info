@@ -13,7 +13,7 @@ end
 
 group 'test' do
   gem 'cutest'
-  gem 'database_cleaner'
+  gem 'database_cleaner-sequel'
   gem 'rack-test'
 end
 

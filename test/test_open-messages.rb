@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cuba/test'
-require 'database_cleaner'
+require 'database_cleaner-sequel'
 require_relative '../app/open-messages'
 
 DatabaseCleaner.strategy = :truncation

@@ -6,7 +6,7 @@ module Controller
     on root,
        param('title'),
        param('textarea') do |title, textarea|
-      if show_user_id.nil? || DataTable.where(username:!show_user_id,title:title)
+      if show_user_id.nil?
         res.redirect('/login')
       else
         DB.transaction do

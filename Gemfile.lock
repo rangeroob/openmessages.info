@@ -1,28 +1,32 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    ast (2.4.1)
+    ast (2.4.2)
     backport (1.1.2)
-    bcrypt (3.1.15)
-    benchmark (0.1.0)
+    bcrypt (3.1.16)
+    benchmark (0.1.1)
     clap (1.0.0)
     cuba (3.9.3)
       rack (>= 1.6.0)
     cutest (1.2.3)
       clap
-    database_cleaner (1.8.5)
+    database_cleaner-core (2.0.1)
+    database_cleaner-sequel (2.0.0)
+      database_cleaner-core (~> 2.0.0)
+      sequel
     dotenv (2.7.6)
     e2mmap (0.1.0)
     jaro_winkler (1.5.4)
     kramdown (2.3.1)
       rexml
-    maruku (0.7.3)
-    mini_portile2 (2.5.1)
-    nokogiri (1.11.4)
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
+    mini_portile2 (2.5.3)
+    nokogiri (1.11.7)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
-    parallel (1.19.2)
-    parser (2.7.1.4)
+    parallel (1.20.1)
+    parser (3.0.1.1)
       ast (~> 2.4.1)
     password_blacklist (0.3.0)
     racc (1.5.2)
@@ -30,42 +34,42 @@ GEM
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rainbow (3.0.0)
-    regexp_parser (1.7.1)
+    regexp_parser (2.1.1)
     reverse_markdown (2.0.0)
       nokogiri
     rexml (3.2.5)
-    rubocop (0.89.1)
+    rubocop (1.16.0)
       parallel (~> 1.10)
-      parser (>= 2.7.1.1)
+      parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.7)
+      regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 0.3.0, < 1.0)
+      rubocop-ast (>= 1.7.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (0.3.0)
-      parser (>= 2.7.1.4)
-    ruby-progressbar (1.10.1)
-    sequel (5.35.0)
-    solargraph (0.39.15)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.7.0)
+      parser (>= 3.0.1.1)
+    ruby-progressbar (1.11.0)
+    sequel (5.45.0)
+    solargraph (0.41.1)
       backport (~> 1.1)
       benchmark
       bundler (>= 1.17.2)
       e2mmap
       jaro_winkler (~> 1.5)
-      maruku (~> 0.7, >= 0.7.3)
-      nokogiri (~> 1.9, >= 1.9.1)
-      parser (~> 2.3)
+      kramdown (~> 2.3)
+      kramdown-parser-gfm (~> 1.1)
+      parser (~> 3.0)
       reverse_markdown (>= 1.0.5, < 3)
-      rubocop (~> 0.52)
+      rubocop (>= 0.52)
       thor (~> 1.0)
       tilt (~> 2.0)
       yard (~> 0.9, >= 0.9.24)
     sqlite3-static (3.22.0)
-    thor (1.0.1)
+    thor (1.1.0)
     tilt (2.0.10)
-    unicode-display_width (1.7.0)
-    yard (0.9.25)
+    unicode-display_width (2.0.0)
+    yard (0.9.26)
 
 PLATFORMS
   ruby
@@ -74,7 +78,7 @@ DEPENDENCIES
   bcrypt
   cuba
   cutest
-  database_cleaner
+  database_cleaner-sequel
   dotenv
   kramdown
   password_blacklist
