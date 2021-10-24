@@ -2,6 +2,12 @@
 
 ## openmessages.info
 
+![example picture 1](Screenshot_2021-10-24 8bceaea2 1712 4358 90c9 5b351b698fd8.png "Example Homepage")
+
+![example picture 2](Screenshot_2021-10-24 OpenMessages info(1).png "Example List of Articles")
+
+![example picture 3](Screenshot_2021-10-24 8bceaea2 1712 4358 90c9 5b351b698fd8.png "Example Article")
+
 openmessages.info gives an outlet for users to openly convey their thoughts, feelings, & ideas
 on the web. It is a platform were anybody can signup and start producing meaningful content
 to share and collaborate with friends, family, & the world.
