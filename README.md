@@ -2,11 +2,11 @@
 
 ## openmessages.info
 
-![example picture 1](Screenshot_2021-10-24 8bceaea2 1712 4358 90c9 5b351b698fd8.png "Example Homepage")
+![example picture 1](https://raw.githubusercontent.com/rangeroob/openmessages.info/master/Screenshot_2021-10-24%20OpenMessages%20info.png "Example Homepage")
 
-![example picture 2](Screenshot_2021-10-24 OpenMessages info(1).png "Example List of Articles")
+![example picture 2](https://raw.githubusercontent.com/rangeroob/openmessages.info/master/Screenshot_2021-10-24%20OpenMessages%20info(1).png "Example List of Articles")
 
-![example picture 3](Screenshot_2021-10-24 8bceaea2 1712 4358 90c9 5b351b698fd8.png "Example Article")
+![example picture 3](https://raw.githubusercontent.com/rangeroob/openmessages.info/master/Screenshot_2021-10-24%208bceaea2%201712%204358%2090c9%205b351b698fd8.png "Example Article")
 
 openmessages.info gives an outlet for users to openly convey their thoughts, feelings, & ideas
 on the web. It is a platform were anybody can signup and start producing meaningful content
